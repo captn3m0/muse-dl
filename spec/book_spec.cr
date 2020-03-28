@@ -1,9 +1,10 @@
 require "./spec_helper"
 
 describe Muse::Dl::Book do
+  html = File.new("spec/fixtures/book-875.html").gets_to_end
+  book = Muse::Dl::Book.new html
+
   it "it should parse the infobox for 875" do
-    html = File.new("spec/fixtures/book-875.html").gets_to_end
-    book = Muse::Dl::Book.new html
     book.info["ISBN"].should eq "9780813928517"
     book.info["Related ISBN"].should eq "9780813928456"
     book.info["OCLC"].should eq "755633557"
@@ -11,6 +12,21 @@ describe Muse::Dl::Book do
     book.info["Launched on MUSE"].should eq "2012-01-01"
     book.info["Language"].should eq "English"
     book.info["Open Access"].should eq "No"
+
+    book.title.should eq "Accommodating Revolutions: Virginia's Northern Neck in an Era of Transformations, 1760-1810"
+    book.author.should eq "Albert H. Tillson, Jr."
+    book.date.should eq "2010"
+    book.publisher.should eq "University of Virginia Press"
+  end
+
+  it "should parse the summary" do
+    book.summary.should eq "Accommodating Revolutions addresses a controversy of long standing among historians of eighteenth-century America and Virginia—the extent to which internal conflict and/or consensus characterized the society of the Revolutionary era. In particular, it emphasizes the complex and often self-defeating actions and decisions of dissidents and other non-elite groups. By focusing on a small but significant region, Tillson elucidates the multiple and interrelated sources of conflict that beset Revolutionary Virginia, but also explains why in the end so little changed."
+    book.summary_html.should eq "<u>Accommodating Revolutions </u>addresses a controversy of long standing among historians of eighteenth-century America and Virginia—the extent to which internal conflict and/or consensus characterized the society of the Revolutionary era. In particular, it emphasizes the complex and often self-defeating actions and decisions of dissidents and other non-elite groups. By focusing on a small but significant region, Tillson elucidates the multiple and interrelated sources of conflict that beset Revolutionary Virginia, but also explains why in the end so little changed."
+  end
+
+  it "should parse the cover" do
+    book.cover_url.should eq "https://muse.jhu.edu/book/875/image/front_cover.jpg"
+    book.thumbnail_url.should eq "https://muse.jhu.edu/book/875/image/front_cover.jpg?format=180"
   end
 
   it "it should parse the DOI for 68534" do

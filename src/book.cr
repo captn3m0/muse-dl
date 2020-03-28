@@ -1,13 +1,6 @@
-require "./infoparser.cr"
-require "myhtml"
+require "./thing.cr"
 
 module Muse::Dl
-  class Book
-    @info = Hash(String, String).new
-    getter :info
-
-    def initialize(html : String)
-      @info = InfoParser.infobox(Myhtml::Parser.new html)
-    end
+  class Book < Muse::Dl::Thing
   end
 end

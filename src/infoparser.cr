@@ -16,7 +16,29 @@ module Muse::Dl
       return info
     end
 
-    def self.title
+    def self.title(myhtml : Myhtml::Parser)
+      myhtml.css("#book_about_info .title").map(&.inner_text).to_a[0].strip
+    end
+
+    def self.author(myhtml : Myhtml::Parser)
+      myhtml.css("#book_about_info .author").map(&.inner_text).to_a[0].strip
+    end
+
+    def self.date(myhtml : Myhtml::Parser)
+      myhtml.css("#book_about_info .date").map(&.inner_text).to_a[0].strip
+    end
+
+    def self.publisher(myhtml : Myhtml::Parser)
+      myhtml.css("#book_about_info .pub a").map(&.inner_text).to_a[0].strip
+    end
+
+    def self.summary(myhtml : Myhtml::Parser)
+      myhtml.css("#book_about_info .card_summary").map(&.inner_text).to_a[0].strip
+    end
+
+    def self.summary_html(myhtml : Myhtml::Parser)
+      return "TODO"
+      myhtml.css("#book_about_info .card_summary").map(&.tag_text).to_a[0].strip
     end
   end
 end
