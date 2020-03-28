@@ -11,7 +11,11 @@ module Muse::Dl
 
   # TODO: Put your code here
   class Main
-    def self.run
+    def self.run(args : Array(String))
+      parser = Parser.new(args)
+      Fetch.get_info(parser.url)
     end
   end
 end
+
+Muse::Dl::Main.run(ARGV)
