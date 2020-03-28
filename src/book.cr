@@ -1,4 +1,5 @@
 require "./infoparser.cr"
+require "myhtml"
 
 module Muse::Dl
   class Book
@@ -6,7 +7,7 @@ module Muse::Dl
     getter :info
 
     def initialize(html : String)
-      @info = InfoParser.parse(html)
+      @info = InfoParser.infobox(Myhtml::Parser.new html)
     end
   end
 end
