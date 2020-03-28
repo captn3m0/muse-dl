@@ -6,7 +6,7 @@ module Muse::Dl
     @tmp : String
     @cleanup : Bool
     @output : String
-    @url : String | Nil
+    @url = "INVALID_URL"
 
     getter :bookmarks, :tmp, :cleanup, :output, :url
 
@@ -27,6 +27,7 @@ module Muse::Dl
       begin
         @url = arg[-1]
       rescue e : Exception
+        @url = ""
         raise Errors::MissingLink.new
       end
     end

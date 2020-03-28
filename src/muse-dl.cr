@@ -2,8 +2,7 @@ require "./parser.cr"
 require "./pdftk.cr"
 require "./fetch.cr"
 require "./book.cr"
-
-# require "./journal.cr"
+require "./journal.cr"
 
 # TODO: Write documentation for `Muse::Dl`
 module Muse::Dl
@@ -13,7 +12,13 @@ module Muse::Dl
   class Main
     def self.run(args : Array(String))
       parser = Parser.new(args)
-      Fetch.get_info(parser.url)
+      thing = Fetch.get_info(parser.url)
+
+      if thing.is_a? Muse::Dl::Book
+        thing.chapters.each do |chapter|
+          Fetch.save_chapter(parser.tmp, chapter[0])
+        end
+      end
     end
   end
 end
