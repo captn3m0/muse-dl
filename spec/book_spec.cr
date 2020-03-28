@@ -29,6 +29,27 @@ describe Muse::Dl::Book do
     book.thumbnail_url.should eq "https://muse.jhu.edu/book/875/image/front_cover.jpg?format=180"
   end
 
+  it "should parse the chapters" do
+    book.chapters.should eq [
+      ["16872", "Cover"],
+      ["16873", "Title Page"],
+      ["16874", "Copyright Page"],
+      ["16875", "Table of Contents"],
+      ["16876", "Acknowledgments"],
+      ["16877", "Introduction"],
+      ["16878", "Chapter 1: A Troubled Gentry"],
+      ["16879", "Chapter 2: Beyond the Plantations"],
+      ["16880", "Chapter 3: The World(s) Northern Neck Slavery Made"],
+      ["16881", "Chapter 4: The Scottish Merchants\n"],
+      ["16882", "Chapter 5: Controlling the Revolution\n"],
+      ["16883", "Chapter 6: The Evangelical Challenge"],
+      ["16884", "Chapter 7: The Preservation of Hegemony"],
+      ["16885", "Notes"],
+      ["16886", "Bibliography"],
+      ["16887", "Index"],
+    ]
+  end
+
   it "it should parse the DOI for 68534" do
     html = File.new("spec/fixtures/book-68534.html").gets_to_end
     book = Muse::Dl::Book.new html
