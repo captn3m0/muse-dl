@@ -1,2 +1,7 @@
 require "spec"
-require "../src/muse-dl"
+require "../src/book"
+require "../src/parser"
+require "../src/fetch"
+require "../src/journal"
+require "../src/pdftk"
+require "../src/thing"

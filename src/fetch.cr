@@ -1,4 +1,5 @@
 require "crest"
+require "./errors/*"
 
 module Muse::Dl
   class Fetch
@@ -14,10 +15,10 @@ module Muse::Dl
             return Muse::Dl::Journal.new response
           end
         rescue ex : Crest::NotFound
-          raise Muse::Dl::InvalidLink
+          raise Muse::Dl::Errors::InvalidLink
         end
       else
-        raise Muse::Dl::InvalidLink
+        raise Muse::Dl::Errors::InvalidLink
       end
     end
   end
