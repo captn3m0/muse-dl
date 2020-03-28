@@ -1,6 +1,7 @@
 require "./parser.cr"
 require "./pdftk.cr"
 require "./fetch.cr"
+require "./book.cr"
 
 # TODO: Write documentation for `Muse::Dl`
 module Muse::Dl
