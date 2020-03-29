@@ -29,7 +29,7 @@ module Muse::Dl
         unless parser.input_pdf
           # Save each chapter
           thing.chapters.each do |chapter|
-            Fetch.save_chapter(parser.tmp, chapter[0], chapter[1], parser.bookmarks)
+            Fetch.save_chapter(parser.tmp, chapter[0], chapter[1], parser.cookie, parser.bookmarks)
           end
           chapter_ids = thing.chapters.map { |c| c[0] }
 

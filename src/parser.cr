@@ -11,10 +11,11 @@ module Muse::Dl
     @input_pdf : String | Nil
     @clobber = false
     @input_list : String | Nil
+    @cookie : String | Nil
 
     DEFAULT_FILE_NAME = "tempfilename.pdf"
 
-    getter :bookmarks, :tmp, :cleanup, :output, :url, :input_pdf, :clobber, :input_list
+    getter :bookmarks, :tmp, :cleanup, :output, :url, :input_pdf, :clobber, :input_list, :cookie
     setter :url
 
     # Update the output filename unless we have a custom one passed
@@ -53,6 +54,7 @@ module Muse::Dl
       parser.on(long_flag = "--no-bookmarks", description = "Don't add bookmarks in the PDF") { @bookmarks = false }
       parser.on(long_flag = "--input-pdf INPUT", description = "Input Stitched PDF. Will not download anything") { |input| @input_pdf = input }
       parser.on(long_flag = "--clobber", description = "Overwrite the output file, if it already exists. Not compatible with input-pdf") { @clobber = true }
+      parser.on(long_flag = "--cookie COOKIE", description = "Cookie-header") { |cookie| @cookie = cookie }
       parser.on("-h", "--help", "Show this help") { puts parser }
 
       parser.unknown_args do |args|

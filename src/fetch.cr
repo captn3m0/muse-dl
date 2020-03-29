@@ -4,22 +4,19 @@ require "./errors/*"
 module Muse::Dl
   class Fetch
     USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"
-    HEADERS    = {
-      "User-Agent"                => USER_AGENT,
-      "Accept"                    => "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-      "Accept-Language"           => "en-US,en;q=0.5",
-      "DNT"                       => "1",
-      "Cookie"                    => "session=124.123.104.8.1585420925750331; session=25719682.5a1ef8cb90ec8",
-      "Connection"                => "keep-alive",
-      "Upgrade-Insecure-Requests" => "1",
-      "Cache-Control"             => "max-age=0",
+
+    HEADERS = {
+      "User-Agent"      => USER_AGENT,
+      "Accept"          => "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      "Accept-Language" => "en-US,en;q=0.5",
+      "Connection"      => "keep-alive",
     }
 
     def self.chapter_file_name(id : String, tmp_path : String)
       "#{tmp_path}/chapter-#{id}.pdf"
     end
 
-    def self.save_chapter(tmp_path : String, chapter_id : String, chapter_title : String, add_bookmark = true)
+    def self.save_chapter(tmp_path : String, chapter_id : String, chapter_title : String, cookie : String | Nil = nil, add_bookmark = true)
       final_pdf_file = chapter_file_name chapter_id, tmp_path
       tmp_pdf_file = "#{final_pdf_file}.tmp"
 
@@ -33,6 +30,11 @@ module Muse::Dl
         "Referer" => "https://muse.jhu.edu/verify?url=%2Fchapter%2F#{chapter_id}%2Fpdf",
       })
 
+      if cookie
+        headers["Cookie"] = cookie
+      end
+
+      # TODO: Add validation for the downloaded file (should be PDF)
       Crest.get(url, max_redirects: 0, handle_errors: false, headers: headers) do |response|
         File.open(tmp_pdf_file, "w") do |file|
           IO.copy(response.body_io, file)
