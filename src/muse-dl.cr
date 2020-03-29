@@ -20,7 +20,9 @@ module Muse::Dl
         end
         chapter_ids = thing.chapters.map { |c| c[0] }
         pdf_builder = Pdftk.new(parser.tmp)
-        pdf_builder.stitch(parser.output, chapter_ids)
+        temp_stitched_file = pdf_builder.stitch chapter_ids
+        pdf_builder.add_metadata(temp_stitched_file, parser.output, thing)
+        temp_stitched_file.delete
         puts "Saved final output to #{parser.output}"
       end
     end
