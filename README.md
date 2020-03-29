@@ -7,15 +7,12 @@ TODO
 ## Usage
 
 ```
-muse-dl --help
-
-USAGE: muse-dl [FLAGS] URL
-
-FLAGS:
-	--no-bookmarks: Don't add bookmarks
-	--no-cleanup: Don't cleanup temporary files
-	--tmp-dir /path: Use /path as temporary directory
-	--output file.pdf: Use file.pdf as output filename
+Usage: muse-dl [--flags] URL
+    --no-cleanup                     Don't cleanup temporary files
+    --tmp-dir PATH                   Temporary Directory to use
+    --output FILE                    Output Filename
+    --no-bookmarks                   Don't add bookmarks in the PDF
+    -h, --help                       Show this help
 ```
 
 ## License

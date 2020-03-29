@@ -6,10 +6,17 @@ module Muse::Dl
     @bookmarks = true
     @tmp : String
     @cleanup = true
-    @output = "tempfilename.pdf"
+    @output = DEFAULT_FILE_NAME
     @url = "INVALID_URL"
 
+    DEFAULT_FILE_NAME = "tempfilename.pdf"
+
     getter :bookmarks, :tmp, :cleanup, :output, :url
+
+    # Update the output filename unless we have a custom one passed
+    def output=(output_file : String)
+      @output = output_file unless @output != DEFAULT_FILE_NAME
+    end
 
     def find_next(arg : Array(String), flag : String, default)
       search = arg.index flag

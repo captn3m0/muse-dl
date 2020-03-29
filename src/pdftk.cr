@@ -61,19 +61,19 @@ module Muse::Dl
       InfoValue: Project MUSE (https://muse.jhu.edu/)
       InfoBegin
       InfoKey: Producer
-      InfoValue: Muse-DL
+      InfoValue: Muse-DL/#{Muse::Dl::VERSION}
       InfoBegin
       InfoKey: Title
       InfoValue: #{book.title}
       InfoBegin
       InfoKey: Keywords
-      InfoValue: Publisher: #{book.publisher}, Published #{book.date}
+      InfoValue: Publisher:#{book.publisher}, Published:#{book.date}
       InfoBegin
       InfoKey: Author
       InfoValue: #{book.author}
       InfoBegin
       InfoKey: Subject
-      InfoValue: #{book.summary.gsub("\n", " ")}
+      InfoValue: #{book.summary.gsub(/\n\s+/, " ")}
       EOT
 
       # Known Info keys, if they are present
