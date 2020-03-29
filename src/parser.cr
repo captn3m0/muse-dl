@@ -1,11 +1,12 @@
-require "./errors/missing_link.cr"
+require "option_parser"
+require "dir"
 
 module Muse::Dl
   class Parser
-    @bookmarks : Bool
+    @bookmarks = true
     @tmp : String
-    @cleanup : Bool
-    @output : String
+    @cleanup = true
+    @output = "tempfilename.pdf"
     @url = "INVALID_URL"
 
     getter :bookmarks, :tmp, :cleanup, :output, :url
@@ -20,16 +21,31 @@ module Muse::Dl
     end
 
     def initialize(arg : Array(String) = [] of String)
-      @bookmarks = !arg.index "--no-bookmarks"
-      @cleanup = !arg.index "--no-cleanup"
-      @tmp = find_next(arg, "--tmp-dir", "/tmp")
-      @output = find_next(arg, "--output", "tempfilename.pdf")
-      begin
-        @url = arg[-1]
-      rescue e : Exception
-        @url = ""
-        raise Errors::MissingLink.new
+      @tmp = Dir.tempdir
+
+      parser = OptionParser.new
+      parser.banner = "Usage: muse-dl [--flags] URL"
+      parser.on(long_flag = "--no-cleanup", description = "Don't cleanup temporary files") { @cleanup = false }
+      parser.on(long_flag = "--tmp-dir PATH", description = "Temporary Directory to use") { |path| @tmp = path }
+      parser.on(long_flag = "--output FILE", description = "Output Filename") { |file| @output = file }
+      parser.on(long_flag = "--no-bookmarks", description = "Don't add bookmarks in the PDF") { @bookmarks = false }
+      parser.on("-h", "--help", "Show this help") { puts parser }
+
+      parser.unknown_args do |args|
+        if args.size != 1
+          puts parser
+          exit 1
+        end
+        @url = args[0]
       end
+
+      parser.invalid_option do |flag|
+        STDERR.puts "ERROR: #{flag} is not a valid option."
+        STDERR.puts parser
+        exit(1)
+      end
+
+      parser.parse(arg)
     end
   end
 end

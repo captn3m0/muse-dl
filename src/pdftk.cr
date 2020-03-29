@@ -2,6 +2,7 @@ require "process"
 require "file"
 require "./fetch"
 require "./errors/*"
+require "dir"
 
 module Muse::Dl
   class Pdftk
@@ -11,7 +12,7 @@ module Muse::Dl
 
     getter :binary
 
-    def initialize(tmp_file_path : String)
+    def initialize(tmp_file_path : String = Dir.tempdir)
       @tmp_file_path = tmp_file_path
 
       possible_binary = Process.find_executable(Pdftk::PDFTK_BINARY_NAME)

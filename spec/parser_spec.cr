@@ -17,12 +17,4 @@ describe Muse::Dl::Parser do
     parser.output.should eq "tempfilename.pdf"
     parser.url.should eq "https://muse.jhu.edu/book/68534"
   end
-
-  it "should raise error on missing options" do
-    begin
-      parser = Muse::Dl::Parser.new([] of String)
-    rescue e : Exception
-      e.class.should eq Muse::Dl::Errors::MissingLink
-    end
-  end
 end
