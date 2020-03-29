@@ -9,9 +9,10 @@ module Muse::Dl
   VERSION = "0.1.0"
 
   class Main
-    def self.run(args : Array(String))
-      parser = Parser.new(args)
-      thing = Fetch.get_info(parser.url)
+    def self.dl(parser : Parser)
+      url = parser.url
+      thing = Fetch.get_info(url) if url
+      return unless thing
 
       if thing.is_a? Muse::Dl::Book
         # Will have no effect if parser has a custom title
@@ -42,6 +43,20 @@ module Muse::Dl
 
         temp_stitched_file.delete if temp_stitched_file
         puts "Saved final output to #{parser.output}"
+      end
+    end
+
+    def self.run(args : Array(String))
+      parser = Parser.new(args)
+
+      input_list = parser.input_list
+      if input_list
+        File.each_line input_list do |url|
+          parser.url = url.strip
+          Main.dl parser
+        end
+      elsif parser.url
+        Main.dl parser
       end
     end
   end
