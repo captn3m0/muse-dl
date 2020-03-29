@@ -20,8 +20,8 @@ module Muse::Dl
 
         # If file exists and we can't clobber
         if File.exists?(parser.output) && parser.clobber == false
-          STDERR.puts "File already exists, not doing anything"
-          Process.exit(1)
+          STDERR.puts "File already exists: #{parser.output}"
+          return
         end
         temp_stitched_file = nil
         pdf_builder = Pdftk.new(parser.tmp)
@@ -52,7 +52,10 @@ module Muse::Dl
       input_list = parser.input_list
       if input_list
         File.each_line input_list do |url|
+          # TODO: Change this to nil
+          parser.reset_output_file
           parser.url = url.strip
+          # Ask the download process to not quit the process, and return instead
           Main.dl parser
         end
       elsif parser.url

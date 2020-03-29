@@ -22,6 +22,10 @@ module Muse::Dl
       @output = output_file unless @output != DEFAULT_FILE_NAME
     end
 
+    def reset_output_file
+      @output = DEFAULT_FILE_NAME
+    end
+
     def find_next(arg : Array(String), flag : String, default)
       search = arg.index flag
       if search
