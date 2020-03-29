@@ -17,17 +17,30 @@ module Muse::Dl
         # Will have no effect if parser has a custom title
         parser.output = Util.slug_filename "#{thing.title}.pdf"
 
-        # Save each chapter
-        thing.chapters.each do |chapter|
-          Fetch.save_chapter(parser.tmp, chapter[0], chapter[1], parser.bookmarks)
+        # If file exists and we can't clobber
+        if File.exists?(parser.output) && parser.clobber == false
+          STDERR.puts "File already exists, not doing anything"
+          Process.exit(1)
         end
-        chapter_ids = thing.chapters.map { |c| c[0] }
-
-        # Stitch the PDFs together
+        temp_stitched_file = nil
         pdf_builder = Pdftk.new(parser.tmp)
-        temp_stitched_file = pdf_builder.stitch chapter_ids
-        pdf_builder.add_metadata(temp_stitched_file, parser.output, thing)
-        temp_stitched_file.delete
+
+        unless parser.input_pdf
+          # Save each chapter
+          thing.chapters.each do |chapter|
+            Fetch.save_chapter(parser.tmp, chapter[0], chapter[1], parser.bookmarks)
+          end
+          chapter_ids = thing.chapters.map { |c| c[0] }
+
+          # Stitch the PDFs together
+          temp_stitched_file = pdf_builder.stitch chapter_ids
+          pdf_builder.add_metadata(temp_stitched_file, parser.output, thing)
+        else
+          x = parser.input_pdf
+          pdf_builder.add_metadata(File.open(x), parser.output, thing) if x
+        end
+
+        temp_stitched_file.delete if temp_stitched_file
         puts "Saved final output to #{parser.output}"
       end
     end

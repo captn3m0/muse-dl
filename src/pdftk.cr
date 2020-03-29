@@ -54,7 +54,15 @@ module Muse::Dl
     def add_metadata(input_file : File, output_file : String, book : Book)
       # First we have to dump the current metadata
       metadata_text_file = File.tempfile("muse-dl-metadata-tmp", ".txt")
-      # TODO: Add version info in the Creator/Producer
+      keywords = "Publisher:#{book.publisher}, Published:#{book.date}"
+
+      # Known Info keys, if they are present
+      ["ISBN", "Related ISBN", "DOI", "Language", "OCLC"].each do |label|
+        if book.info.has_key? label
+          keywords += ", #{label}:#{book.info[label]}"
+        end
+      end
+
       text = <<-EOT
       InfoBegin
       InfoKey: Creator
@@ -67,26 +75,20 @@ module Muse::Dl
       InfoValue: #{book.title}
       InfoBegin
       InfoKey: Keywords
-      InfoValue: Publisher:#{book.publisher}, Published:#{book.date}
+      InfoValue: #{keywords}
       InfoBegin
       InfoKey: Author
       InfoValue: #{book.author}
       InfoBegin
       InfoKey: Subject
       InfoValue: #{book.summary.gsub(/\n\s+/, " ")}
+      InfoBegin
+      InfoKey: ModDate
+      InfoValue:
+      InfoBegin
+      InfoKey: CreationDate
+      InfoValue:
       EOT
-
-      # Known Info keys, if they are present
-
-      ["ISBN", "Related ISBN", "DOI", "Language", "OCLC"].each do |label|
-        if book.info.has_key? label
-          text += <<-EOT
-          InfoBegin
-          InfoKey: #{label}
-          InfoValue: #{book.info[label]}
-          EOT
-        end
-      end
 
       File.write(metadata_text_file.path, text)
       execute [input_file.path, "update_info_utf8", metadata_text_file.path, "output", output_file]
