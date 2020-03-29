@@ -4,9 +4,7 @@ require "./errors/*"
 module Muse::Dl
   class Fetch
     USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"
-    # TODO: Add support for cookies?
-    # "Cookie"                    => "session=124.123.104.8.1585388207021325",
-    HEADERS = {
+    HEADERS    = {
       "User-Agent"                => USER_AGENT,
       "Accept"                    => "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
       "Accept-Language"           => "en-US,en;q=0.5",
@@ -17,27 +15,42 @@ module Muse::Dl
       "Cache-Control"             => "max-age=0",
     }
 
-    def self.save_chapter(tmp_path : String, chapter_id : String, add_bookmark = true)
+    def self.chapter_file_name(id : String, tmp_path : String)
+      "#{tmp_path}/chapter-#{id}.pdf"
+    end
+
+    def self.save_chapter(tmp_path : String, chapter_id : String, chapter_title : String, add_bookmark = true)
+      final_pdf_file = chapter_file_name chapter_id, tmp_path
+      tmp_pdf_file = "#{final_pdf_file}.tmp"
+
+      if File.exists? final_pdf_file
+        puts "#{chapter_id} already downloaded"
+        return
+      end
+
       url = "https://muse.jhu.edu/chapter/#{chapter_id}"
       headers = HEADERS.merge({
         "Referer" => "https://muse.jhu.edu/verify?url=%2Fchapter%2F#{chapter_id}%2Fpdf",
       })
 
-      begin
-        Crest.get(url, max_redirects: 0, handle_errors: false, headers: headers) do |response|
-          File.open("#{tmp_path}/chapter-#{chapter_id}.pdf", "w") do |file|
-            IO.copy(response.body_io, file)
-          end
-        rescue e : Exception
-          puts e.message
-          raise e
-          # We catch a temporary redirect
-          # https://github.com/mamantoha/crest/blob/29a690726902c71884f9c80f0f9565256e74b7fd/src/crest/exceptions.cr#L20-L28
+      Crest.get(url, max_redirects: 0, handle_errors: false, headers: headers) do |response|
+        File.open(tmp_pdf_file, "w") do |file|
+          IO.copy(response.body_io, file)
         end
-      rescue e : Exception
-        puts "FICK"
-        raise e
       end
+
+      pdftk = Muse::Dl::Pdftk.new tmp_path
+
+      pdftk.strip_first_page tmp_pdf_file
+
+      if add_bookmark
+        # Run pdftk and add the bookmark to the file
+        pdftk.add_bookmark tmp_pdf_file, chapter_title
+      end
+
+      # Now we can move the file to the proper PDF filename
+      File.rename tmp_pdf_file, final_pdf_file
+      puts "Downloaded #{chapter_id}"
     end
 
     def self.get_info(url : String) : Muse::Dl::Thing | Nil

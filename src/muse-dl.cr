@@ -16,8 +16,12 @@ module Muse::Dl
 
       if thing.is_a? Muse::Dl::Book
         thing.chapters.each do |chapter|
-          Fetch.save_chapter(parser.tmp, chapter[0])
+          Fetch.save_chapter(parser.tmp, chapter[0], chapter[1], parser.bookmarks)
         end
+        chapter_ids = thing.chapters.map { |c| c[0] }
+        pdf_builder = Pdftk.new(parser.tmp)
+        pdf_builder.stitch(parser.output, chapter_ids)
+        puts "Saved final output to #{parser.output}"
       end
     end
   end
