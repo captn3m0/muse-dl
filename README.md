@@ -2,6 +2,10 @@
 
 Download PDFs from Project MUSE and stitch them together into a single-file using [`pdftk`](https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/).
 
+# :warning: WARNING :warning:
+
+Any downloads you perform with this tool are for your own usage. I personally hate reading PDFs on a browser, this lets me read them much more easily offline. This is just for personal use.
+
 # Installation
 
 ```
