@@ -1,4 +1,4 @@
-# muse-dl
+# muse-dl ![Travis (.org)](https://img.shields.io/travis/captn3m0/muse-dl) ![GitHub issues](https://img.shields.io/github/issues/captn3m0/muse-dl) ![GitHub issues by-label](https://img.shields.io/github/issues/captn3m0/muse-dl/bug?color=red&label=open%20bugs) ![GitHub](https://img.shields.io/github/license/captn3m0/muse-dl) ![GitHub top language](https://img.shields.io/github/languages/top/captn3m0/muse-dl) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) 
 
 Download PDFs from Project MUSE and stitch them together into a single-file using [`pdftk`](https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/).
 
