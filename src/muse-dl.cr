@@ -15,6 +15,10 @@ module Muse::Dl
       return unless thing
 
       if thing.is_a? Muse::Dl::Book
+        unless thing.formats.includes? :pdf
+          STDERR.puts "Book not available in PDF format, skipping: #{url}"
+          return
+        end
         # Will have no effect if parser has a custom title
         parser.output = Util.slug_filename "#{thing.title}.pdf"
 

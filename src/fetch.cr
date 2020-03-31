@@ -25,6 +25,7 @@ module Muse::Dl
         return
       end
 
+      # TODO: Remove this hardcoding, and make this more generic by generating it within the Book class
       url = "https://muse.jhu.edu/chapter/#{chapter_id}/pdf"
       headers = HEADERS.merge({
         "Referer" => "https://muse.jhu.edu/verify?url=%2Fchapter%2F#{chapter_id}%2Fpdf",
