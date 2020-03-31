@@ -17,6 +17,8 @@ describe Muse::Dl::Book do
     book.author.should eq "Albert H. Tillson, Jr."
     book.date.should eq "2010"
     book.publisher.should eq "University of Virginia Press"
+    book.formats.should contain :pdf
+    book.formats.should_not contain :html
   end
 
   it "should parse the summary" do
@@ -50,7 +52,7 @@ describe Muse::Dl::Book do
     ]
   end
 
-  it "it should parse the DOI for 68534" do
+  it "should parse book/68534" do
     html = File.new("spec/fixtures/book-68534.html").gets_to_end
     book = Muse::Dl::Book.new html
     book.info["ISBN"].should eq "9781501737695"
@@ -60,5 +62,14 @@ describe Muse::Dl::Book do
     book.info["Language"].should eq "English"
     book.info["Open Access"].should eq "Yes"
     book.info["DOI"].should eq "10.1353/book.68534"
+    book.formats.should contain :html
+    book.formats.should_not contain :pdf
+  end
+
+  it "should note both formats for book/60322" do
+    html = File.new("spec/fixtures/book-60322.html").gets_to_end
+    book = Muse::Dl::Book.new html
+    book.formats.should contain :pdf
+    book.formats.should contain :html
   end
 end

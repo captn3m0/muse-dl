@@ -25,7 +25,7 @@ module Muse::Dl
         return
       end
 
-      url = "https://muse.jhu.edu/chapter/#{chapter_id}"
+      url = "https://muse.jhu.edu/chapter/#{chapter_id}/pdf"
       headers = HEADERS.merge({
         "Referer" => "https://muse.jhu.edu/verify?url=%2Fchapter%2F#{chapter_id}%2Fpdf",
       })

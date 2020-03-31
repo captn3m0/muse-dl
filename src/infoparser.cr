@@ -1,5 +1,12 @@
 require "myhtml"
 
+# https://github.com/kostya/myhtml/issues/19
+struct Myhtml::Node
+  def inner_html
+    String.build { |buf| children.each &.to_html(buf) }
+  end
+end
+
 module Muse::Dl
   class InfoParser
     def self.infobox(myhtml : Myhtml::Parser)
@@ -14,6 +21,13 @@ module Muse::Dl
         end
       end
       return info
+    end
+
+    def self.id(myhtml : Myhtml::Parser)
+      searchid = myhtml.css("#search_within_book_id").first
+      if searchid
+        searchid.attribute_by("value")
+      end
     end
 
     def self.title(myhtml : Myhtml::Parser)
@@ -42,8 +56,24 @@ module Muse::Dl
     end
 
     def self.summary_html(myhtml : Myhtml::Parser)
-      return "TODO"
-      myhtml.css("#book_about_info .card_summary").map(&.tag_text).to_a[0].strip
+      summary_div = myhtml.css("#book_about_info .card_summary")
+      begin
+        summary_div.first.inner_html
+      rescue e : Exception
+        "NA"
+      end
+    end
+
+    def self.formats(myhtml : Myhtml::Parser)
+      formats = Set(Symbol).new
+      myhtml.css("img.icon").each do |icon|
+        url = icon.attribute_by("src")
+        if url
+          formats.add :html if /html/i.match url
+          formats.add :pdf if /pdf/i.match url
+        end
+      end
+      formats
     end
   end
 end

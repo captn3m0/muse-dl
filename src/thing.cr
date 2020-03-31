@@ -13,22 +13,26 @@ module Muse::Dl
     @cover_url : String
     @thumbnail_url : String
     @h : Myhtml::Parser
+    @formats : Set(Symbol)
 
-    getter :info, :title, :author, :date, :publisher, :summary, :summary_html, :cover_url, :thumbnail_url
+    getter :info, :title, :author, :date, :publisher, :summary, :summary_html, :cover_url, :thumbnail_url, :formats
 
     private getter :h
 
     def initialize(html : String)
       @h = Myhtml::Parser.new html
       @info = InfoParser.infobox(h)
+      id : String | Nil = InfoParser.id(h)
       @title = InfoParser.title(h)
       @author = InfoParser.author(h)
       @date = InfoParser.date(h)
       @publisher = InfoParser.publisher(h)
       @summary = InfoParser.summary(h)
       @summary_html = InfoParser.summary_html(h)
-      @cover_url = "TODO"
-      @thumbnail_url = "TODO"
+      @formats = InfoParser.formats(h)
+      # TODO: Make this work for journals as well
+      @cover_url = "https://muse.jhu.edu/book/#{id}/image/front_cover.jpg"
+      @thumbnail_url = "https://muse.jhu.edu/book/#{id}/image/front_cover.jpg?format=180"
     end
   end
 end
