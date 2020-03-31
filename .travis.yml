@@ -3,3 +3,8 @@ language: crystal
 script:
   - crystal spec
   - crystal tool format --check
+
+addons:
+  apt:
+    packages:
+      - pdftk

@@ -7,14 +7,15 @@ require "dir"
 module Muse::Dl
   class Pdftk
     PDFTK_BINARY_NAME = "pdftk"
-    @binary = "/usr/sbin/pdftk"
+    @binary : String | Nil
     @tmp_file_path : String
 
-    getter :binary
+    def ready?
+      @binary != nil
+    end
 
     def initialize(tmp_file_path : String = Dir.tempdir)
       @tmp_file_path = tmp_file_path
-
       possible_binary = Process.find_executable(Pdftk::PDFTK_BINARY_NAME)
       if possible_binary
         @binary = possible_binary
