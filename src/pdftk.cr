@@ -26,7 +26,10 @@ module Muse::Dl
     end
 
     def execute(args : Array(String))
-      Process.run(@binary, args)
+      binary = @binary
+      if binary
+        Process.run(binary, args)
+      end
     end
 
     def strip_first_page(input_file : String)
