@@ -1,5 +1,6 @@
 require "crest"
 require "./errors/*"
+require "myhtml"
 
 module Muse::Dl
   class Fetch
@@ -42,6 +43,18 @@ module Muse::Dl
 
       # TODO: Add validation for the downloaded file (should be PDF)
       Crest.get(url, max_redirects: 0, handle_errors: false, headers: headers) do |response|
+        # puts response.headers["Content-Type"]
+        content_type = response.headers["Content-Type"]
+        if content_type.is_a? String
+          if /html/.match content_type
+            puts response
+            response.body_io.each_line do |line|
+              if /Unable to construct chapter PDF/.match line
+                raise Muse::Dl::Errors::MuseCorruptPDF.new
+              end
+            end
+          end
+        end
         File.open(tmp_pdf_file, "w") do |file|
           IO.copy(response.body_io, file)
         end
