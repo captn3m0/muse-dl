@@ -9,6 +9,7 @@ install:
   - curl -sL -o ${HADOLINT} "https://github.com/hadolint/hadolint/releases/download/v1.17.5/hadolint-$(uname -s)-$(uname -m)"
     && chmod 700 ${HADOLINT}
 script:
+  - shards install
   - crystal spec
   - crystal tool format --check
   - git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 ${HADOLINT}
