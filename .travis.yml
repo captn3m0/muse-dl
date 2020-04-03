@@ -1,8 +1,18 @@
 language: crystal
 
+env:
+  # Path to 'hadolint' binary
+  HADOLINT: "${HOME}/hadolint"
+
+install:
+  # Download hadolint binary and set it as executable
+  - curl -sL -o ${HADOLINT} "https://github.com/hadolint/hadolint/releases/download/v1.17.5/hadolint-$(uname -s)-$(uname -m)"
+    && chmod 700 ${HADOLINT}
+  - shards install
 script:
   - crystal spec
   - crystal tool format --check
+  - git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 ${HADOLINT}
 
 addons:
   apt:

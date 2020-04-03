@@ -33,7 +33,12 @@ module Muse::Dl
         unless parser.input_pdf
           # Save each chapter
           thing.chapters.each do |chapter|
-            Fetch.save_chapter(parser.tmp, chapter[0], chapter[1], parser.cookie, parser.bookmarks)
+            begin
+              Fetch.save_chapter(parser.tmp, chapter[0], chapter[1], parser.cookie, parser.bookmarks)
+            rescue e : Muse::Dl::Errors::MuseCorruptPDF
+              STDERR.puts "Got a 'Unable to construct chapter PDF' error from MUSE, skipping: #{url}"
+              return
+            end
           end
           chapter_ids = thing.chapters.map { |c| c[0] }
 
