@@ -21,4 +21,6 @@ RUN apt-get update && \
 
 RUN shards install && shards build --release
 
+VOLUME /output
+
 ENTRYPOINT ["/build/bin/muse-dl"]
