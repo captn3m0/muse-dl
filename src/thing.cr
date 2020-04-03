@@ -6,7 +6,7 @@ module Muse::Dl
     @info = Hash(String, String).new
     @title : String
     @author : String
-    @date : String
+    @date : String | Nil
     @publisher : String
     @summary : String
     @summary_html : String

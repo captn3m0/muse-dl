@@ -39,7 +39,11 @@ module Muse::Dl
     end
 
     def self.date(myhtml : Myhtml::Parser)
-      myhtml.css("#book_about_info .date").map(&.inner_text).to_a[0].strip
+      begin
+        myhtml.css("#book_about_info .date").map(&.inner_text).to_a[0].strip
+      rescue e : Exception
+        nil
+      end
     end
 
     def self.publisher(myhtml : Myhtml::Parser)

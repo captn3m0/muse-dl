@@ -72,4 +72,10 @@ describe Muse::Dl::Book do
     book.formats.should contain :pdf
     book.formats.should contain :html
   end
+
+  it "should note both formats for book/57833" do
+    html = File.new("spec/fixtures/book-57833.html").gets_to_end
+    book = Muse::Dl::Book.new html
+    book.formats.should contain :pdf
+  end
 end
