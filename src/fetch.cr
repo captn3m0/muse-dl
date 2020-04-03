@@ -16,6 +16,11 @@ module Muse::Dl
       "#{tmp_path}/chapter-#{id}.pdf"
     end
 
+    def self.cleanup(tmp_path : String, id : String)
+      fns = chapter_file_name(id, tmp_path)
+      File.delete(fns) if File.exists?(fns)
+    end
+
     def self.save_chapter(tmp_path : String, chapter_id : String, chapter_title : String, cookie : String | Nil = nil, add_bookmark = true)
       final_pdf_file = chapter_file_name chapter_id, tmp_path
       tmp_pdf_file = "#{final_pdf_file}.tmp"

@@ -47,6 +47,13 @@ module Muse::Dl
 
         temp_stitched_file.delete if temp_stitched_file
         puts "Saved final output to #{parser.output}"
+
+        # Cleanup the chapter files
+        if parser.cleanup
+          thing.chapters.each do |c|
+            Fetch.cleanup(parser.tmp, c[0])
+          end
+        end
       end
     end
 
