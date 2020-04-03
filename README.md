@@ -8,6 +8,8 @@ Any downloads you perform with this tool are for your own usage. I personally ha
 
 # Installation
 
+## Linux / Build
+
 ```
 git clone https://github.com/captn3m0/muse-dl.git
 cd muse-dl
@@ -16,9 +18,28 @@ shards build
 ./bin/muse-dl --help
 ```
 
+## Linux / Download
+
+A linux x86_64 static build is available in the latest release: <https://github.com/captn3m0/muse-dl/releases/latest>. Save the file as `muse-dl` and remember to mark it as executable (`chmod +x`).
+
+## Docker
+
+A docker image is available at `captn3m0/muse-dl` on Docker Hub. The working directory for the image is set as `/data`, so you'll need to mount your output-directory as `/data` for it to work. Sample invocations;
+
+```
+# Download the book, and put it in your Downloads directory
+docker run -it /home/nemo/Downloads:/data captn3m0/muse-dl https://muse.jhu.edu/book/875
+
+# If you have a list.txt file in your Downloads directory, then you can run 
+docker run -it /home/nemo/Downloads:/data captn3m0/muse-dl /data/list.txt
+
+# If you want to keep the temporary files with your host, and not delete them
+docker run -it /home/nemo/Downloads:/data /tmp:/musetmp --tmp-dir /musetmp --no-cleanup https://muse.jhu.edu/book/875
+```
+
 ## Requirements
 
-Please ensure you have `pdftk` installed, and run the `muse-dl` binary. To build the binary, please run the steps in Installation.
+Please ensure you have `pdftk` installed, unless you're running via docker.
 
 ## Usage
 
