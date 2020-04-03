@@ -6,7 +6,7 @@ require "./journal.cr"
 require "./util.cr"
 
 module Muse::Dl
-  VERSION = "1.0.1"
+  VERSION = "1.1.0"
 
   class Main
     def self.dl(parser : Parser)
