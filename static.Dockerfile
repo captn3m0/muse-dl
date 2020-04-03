@@ -9,4 +9,4 @@ RUN shards install && \
 
 FROM scratch
 
-COPY --from=builder /build/bin/muse-dl /muse-dl
+COPY --from=builder /build/bin/muse-dl /muse-dl-static
