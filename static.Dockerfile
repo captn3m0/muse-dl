@@ -1,4 +1,4 @@
-FROM jrei/crystal-alpine:edge as builder
+FROM crystallang/crystal:latest as builder
 
 WORKDIR /build
 
