@@ -28,13 +28,13 @@ A docker image is available at `captn3m0/muse-dl` on Docker Hub. The working dir
 
 ```
 # Download the book, and put it in your Downloads directory
-docker run -it /home/nemo/Downloads:/data captn3m0/muse-dl https://muse.jhu.edu/book/875
+docker run -it /home/nemo/Downloads:/data captn3m0/muse-dl:v1.0.2 https://muse.jhu.edu/book/875
 
 # If you have a list.txt file in your Downloads directory, then you can run 
-docker run -it /home/nemo/Downloads:/data captn3m0/muse-dl /data/list.txt
+docker run -it /home/nemo/Downloads:/data captn3m0/muse-dl:v1.0.2 /data/list.txt
 
 # If you want to keep the temporary files with your host, and not delete them
-docker run -it /home/nemo/Downloads:/data /tmp:/musetmp --tmp-dir /musetmp --no-cleanup https://muse.jhu.edu/book/875
+docker run -it /home/nemo/Downloads:/data /tmp:/musetmp captn3m0/muse-dl:v1.0.2 --tmp-dir /musetmp --no-cleanup https://muse.jhu.edu/book/875
 ```
 
 ### Docker Images
