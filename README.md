@@ -1,4 +1,4 @@
-# muse-dl ![Travis (.org)](https://img.shields.io/travis/captn3m0/muse-dl) ![GitHub issues](https://img.shields.io/github/issues/captn3m0/muse-dl) ![GitHub issues by-label](https://img.shields.io/github/issues/captn3m0/muse-dl/bug?color=red&label=open%20bugs) ![GitHub](https://img.shields.io/github/license/captn3m0/muse-dl) ![GitHub top language](https://img.shields.io/github/languages/top/captn3m0/muse-dl) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) 
+# muse-dl ![Travis (.org)](https://img.shields.io/travis/captn3m0/muse-dl) ![GitHub issues](https://img.shields.io/github/issues/captn3m0/muse-dl) ![GitHub issues by-label](https://img.shields.io/github/issues/captn3m0/muse-dl/bug?color=red&label=open%20bugs) ![GitHub](https://img.shields.io/github/license/captn3m0/muse-dl) ![GitHub top language](https://img.shields.io/github/languages/top/captn3m0/muse-dl) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) ![Docker Automated build](https://img.shields.io/docker/automated/captn3m0/muse-dl) ![Docker Build Status](https://img.shields.io/docker/build/captn3m0/muse-dl) ![Docker Image Size (latest semver)](https://img.shields.io/docker/image-size/captn3m0/muse-dl)
 
 Download PDFs from Project MUSE and stitch them together into a single-file using [`pdftk`](https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/).
 
@@ -36,6 +36,15 @@ docker run -it /home/nemo/Downloads:/data captn3m0/muse-dl /data/list.txt
 # If you want to keep the temporary files with your host, and not delete them
 docker run -it /home/nemo/Downloads:/data /tmp:/musetmp --tmp-dir /musetmp --no-cleanup https://muse.jhu.edu/book/875
 ```
+
+### Docker Images
+
+The following images are available:
+
+- `edge`: Run `muse-dl` against latest master.
+- `edge-static`: Get the pre-built static-binary against latest master.
+- `v1.0.2`: Run `muse-dl` against the specific release.
+- `v1.0.2-static`: Get the pre-built static binary against the specific release.
 
 ## Requirements
 
