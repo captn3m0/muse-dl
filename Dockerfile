@@ -21,6 +21,8 @@ RUN mkdir -p /usr/share/man/man1 && \
 	ca-certificates=20190110 \
 	# git to let shards install happen
 	git=1:2.20.1-2+deb10u1 \
+	# needed by myhtml crystal shard
+	make=4.2.1-1.2 \
 	# build --release
 	zlib1g-dev=1:1.2.11.dfsg-1 && \
 	# See https://crystal-lang.org/install/
