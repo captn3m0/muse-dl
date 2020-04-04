@@ -12,6 +12,7 @@ module Muse::Dl
     @clobber = false
     @input_list : String | Nil
     @cookie : String | Nil
+    @h : Bool | Nil
 
     DEFAULT_FILE_NAME = "tempfilename.pdf"
 
@@ -46,8 +47,10 @@ module Muse::Dl
 
       URL: A link to a book on the Project MUSE website, eg https://muse.jhu.edu/book/875
       INPUT_FILE: Path to a file containing a list of links
+      This is muse-dl version #{Muse::Dl::VERSION}
 
       EOT
+
       parser.on(long_flag = "--no-cleanup", description = "Don't cleanup temporary files") { @cleanup = false }
       parser.on(long_flag = "--tmp-dir PATH", description = "Temporary Directory to use") { |path| @tmp = path }
       parser.on(long_flag = "--output FILE", description = "Output Filename") { |file| @output = file }
@@ -55,11 +58,12 @@ module Muse::Dl
       parser.on(long_flag = "--input-pdf INPUT", description = "Input Stitched PDF. Will not download anything") { |input| @input_pdf = input }
       parser.on(long_flag = "--clobber", description = "Overwrite the output file, if it already exists. Not compatible with input-pdf") { @clobber = true }
       parser.on(long_flag = "--cookie COOKIE", description = "Cookie-header") { |cookie| @cookie = cookie }
-      parser.on("-h", "--help", "Show this help") { puts parser }
+      parser.on("-h", "--help", "Show this help") { @h = true; puts parser }
 
       parser.unknown_args do |args|
         if args.size != 1
-          puts parser
+          # Prevent showing helptext twice
+          puts parser unless @h
           exit 1
         end
         if File.exists? args[0]
