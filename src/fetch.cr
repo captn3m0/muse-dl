@@ -49,7 +49,10 @@ module Muse::Dl
           if /html/.match content_type
             puts response
             response.body_io.each_line do |line|
-              if /Unable to construct chapter PDF/.match line
+              # https://muse.jhu.edu/chapter/2383438/pdf
+              # https://muse.jhu.edu/book/67393
+              # Errors are Unable to determine page runs / Unable to construct chapter PDF
+              if /Unable to/.match line
                 raise Muse::Dl::Errors::MuseCorruptPDF.new
               end
             end
