@@ -47,7 +47,6 @@ module Muse::Dl
 
       URL: A link to a book on the Project MUSE website, eg https://muse.jhu.edu/book/875
       INPUT_FILE: Path to a file containing a list of links
-      This is muse-dl version #{Muse::Dl::VERSION}
 
       EOT
 

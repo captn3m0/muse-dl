@@ -24,7 +24,7 @@ module Muse::Dl
 
         # If file exists and we can't clobber
         if File.exists?(parser.output) && parser.clobber == false
-          STDERR.puts "File already exists: #{parser.output}"
+          STDERR.puts "Skipping #{url}, File already exists: #{parser.output}"
           return
         end
         temp_stitched_file = nil
