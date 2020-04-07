@@ -19,8 +19,7 @@ describe Muse::Dl::Issue do
     issue.info["Print ISSN"].should eq "1531-2542"
     issue.info["Launched on MUSE"].should eq "2020-02-05"
     issue.info["Open Access"].should eq "No"
-
-    # issue.title.should eq "Volume 20, Number 1, January 2020"
+    issue.title.should eq "Volume 20, Number 1, January 2020"
   end
 
   # it "should parser summary" do
@@ -29,7 +28,7 @@ describe Muse::Dl::Issue do
   #   EOT
   # end
 
-  # it "should parse publisher" do
-  #   issue.publisher.should eq "Johns Hopkins University Press"
-  # end
+  it "should parse publisher" do
+    issue.publisher.should eq "Johns Hopkins University Press"
+  end
 end

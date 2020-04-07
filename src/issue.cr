@@ -17,7 +17,6 @@ module Muse::Dl
     def initialize(id : String)
       @id = id
       @url = "https://muse.jhu.edu/issue/#{id}"
-      @title = "NA"
       @info = Hash(String, String).new
       @articles = [] of Muse::Dl::Article
     end
@@ -26,6 +25,7 @@ module Muse::Dl
       html = Crest.get(url).to_s
       h = Myhtml::Parser.new html
       @info = InfoParser.infobox(h)
+      @title = InfoParser.issue_title(h)
       @summary = InfoParser.summary(h)
       @publisher = InfoParser.journal_publisher(h)
     end
