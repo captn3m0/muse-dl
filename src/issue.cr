@@ -8,7 +8,7 @@ module Muse::Dl
     @title : String | Nil
     @articles : Array(Muse::Dl::Article)
     @url : String
-    @info : Hash(String, String) | Nil
+    @info : Hash(String, String)
     @summary : String | Nil
     @publisher : String | Nil
 
@@ -18,6 +18,7 @@ module Muse::Dl
       @id = id
       @url = "https://muse.jhu.edu/issue/#{id}"
       @title = "NA"
+      @info = Hash(String, String).new
       @articles = [] of Muse::Dl::Article
     end
 
