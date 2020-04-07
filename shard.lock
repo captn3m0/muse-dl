@@ -12,3 +12,7 @@ shards:
     github: kostya/myhtml
     version: 1.5.1
 
+  webmock:
+    github: manastech/webmock.cr
+    commit: 78bb0e3b5850c700da0e7fbdd2d6c180cc4a061b
+
