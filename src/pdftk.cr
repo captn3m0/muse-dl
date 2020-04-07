@@ -83,10 +83,10 @@ module Muse::Dl
       text = <<-EOT
       InfoBegin
       InfoKey: Creator
-      InfoValue: Project MUSE (https://muse.jhu.edu/)
+      InfoValue:
       InfoBegin
       InfoKey: Producer
-      InfoValue: Muse-DL/#{Muse::Dl::VERSION}
+      InfoValue:
       InfoBegin
       InfoKey: Title
       InfoValue: #{book.title}
