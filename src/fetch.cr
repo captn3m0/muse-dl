@@ -98,7 +98,7 @@ module Muse::Dl
       puts "Downloaded #{chapter_id}"
     end
 
-    def self.get_info(url : String) : Muse::Dl::Thing | Nil
+    def self.get_info(url : String)
       match = /https:\/\/muse.jhu.edu\/(book|journal)\/(\d+)/.match url
       if match
         begin

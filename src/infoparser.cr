@@ -50,9 +50,13 @@ module Muse::Dl
       myhtml.css("#book_about_info .pub a").map(&.inner_text).to_a[0].strip
     end
 
+    def self.journal_publisher(myhtml : Myhtml::Parser)
+      myhtml.css(".card_publisher a").map(&.inner_text).to_a[0].strip
+    end
+
     def self.summary(myhtml : Myhtml::Parser)
       begin
-        return myhtml.css("#book_about_info .card_summary").map(&.inner_text).to_a[0].strip
+        return myhtml.css(".card_summary").map(&.inner_text).to_a[0].strip
       rescue e : Exception
         STDERR.puts "Could not fetch summary"
         return "NA"
