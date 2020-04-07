@@ -20,4 +20,9 @@ describe Muse::Dl::Journal do
   it "should parse publisher" do
     j.publisher.should eq "Johns Hopkins University Press"
   end
+
+  it "should return issues" do
+    j.issues[0].id.should eq "41793"
+    j.issues[-1].id.should eq "1578"
+  end
 end
