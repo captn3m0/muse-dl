@@ -69,7 +69,7 @@ module Muse::Dl
 
       if add_bookmark
         # Run pdftk and add the bookmark to the file
-        pdftk.add_bookmark tmp_pdf_file, chapter_title.strip()
+        pdftk.add_bookmark tmp_pdf_file, chapter_title.strip
       end
 
       # Now we can move the file to the proper PDF filename
