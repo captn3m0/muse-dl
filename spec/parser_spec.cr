@@ -13,7 +13,6 @@ describe Muse::Dl::Parser do
     parser = Muse::Dl::Parser.new(["https://muse.jhu.edu/book/68534"])
     parser.bookmarks.should eq true
     parser.cleanup.should eq true
-    parser.tmp.should eq "/tmp"
     parser.output.should eq "tempfilename.pdf"
     parser.url.should eq "https://muse.jhu.edu/book/68534"
   end

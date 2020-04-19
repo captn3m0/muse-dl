@@ -28,14 +28,22 @@ module Muse::Dl
     def execute(args : Array(String))
       binary = @binary
       if binary
-        Process.run(binary, args)
+        status = Process.run(binary, args, output: STDOUT, error: STDERR)
+        if !status.success?
+          puts "pdftk command failed: #{binary} #{args.join(" ")}"
+        end
+        return status.success?
       end
     end
 
     def strip_first_page(input_file : String)
       output_pdf = File.tempfile("muse-dl-temp", ".pdf")
-      execute [input_file, "cat", "2-end", "output", output_pdf.path]
-      File.rename output_pdf.path, input_file
+      is_success = execute [input_file, "cat", "2-end", "output", output_pdf.path]
+      if is_success
+        File.rename output_pdf.path, input_file
+      else
+        raise Muse::Dl::Errors::PDFOperationError.new("Error stripping first page of chapter.")
+      end
     end
 
     def add_bookmark(input_file : String, title : String)
@@ -48,11 +56,15 @@ module Muse::Dl
       BookmarkPageNumber: 1
       END
       File.write(bookmark_text_file.path, bookmark_text)
-      execute [input_file, "update_info", bookmark_text_file.path, "output", output_pdf.path]
+      is_success = execute [input_file, "update_info", bookmark_text_file.path, "output", output_pdf.path]
 
       # Cleanup
       bookmark_text_file.delete
-      File.rename output_pdf.path, input_file
+      if is_success
+        File.rename output_pdf.path, input_file
+      else
+        raise Muse::Dl::Errors::PDFOperationError.new("Error adding bookmark metadata to chapter.")
+      end
     end
 
     def add_metadata(input_file : File, output_file : String, book : Book)
@@ -95,7 +107,10 @@ module Muse::Dl
       EOT
 
       File.write(metadata_text_file.path, text)
-      execute [input_file.path, "update_info_utf8", metadata_text_file.path, "output", output_file]
+      is_success = execute [input_file.path, "update_info_utf8", metadata_text_file.path, "output", output_file]
+      if !is_success
+        raise Muse::Dl::Errors::PDFOperationError.new("Error adding metadata to book.")
+      end
       metadata_text_file.delete
     end
 
@@ -111,9 +126,12 @@ module Muse::Dl
 
       chapter_files = chapter_ids.map { |id| Fetch.chapter_file_name(id, @tmp_file_path) }
       args = chapter_files + ["cat", "output", output_file.path]
-      execute args
+      is_success = execute args
 
       # TODO: Validate final file here
+      if !is_success
+        raise Muse::Dl::Errors::PDFOperationError.new("Error stitching chapters together.")
+      end
 
       return output_file
     end

@@ -65,14 +65,26 @@ module Muse::Dl
     def self.run(args : Array(String))
       parser = Parser.new(args)
 
+      delay_secs = 1
       input_list = parser.input_list
       if input_list
         File.each_line input_list do |url|
-          # TODO: Change this to nil
-          parser.reset_output_file
-          parser.url = url.strip
-          # Ask the download process to not quit the process, and return instead
-          Main.dl parser
+          begin
+            # TODO: Change this to nil
+            parser.reset_output_file
+            parser.url = url.strip
+            # Ask the download process to not quit the process, and return instead
+            Main.dl parser
+            if delay_secs >= 2
+              delay_secs /= 2
+            end
+          rescue ex
+            puts ex.message
+            puts ex.backtrace.join("\n    ")
+            puts "Error. Skipping book: #{url}. Waiting for #{delay_secs} seconds before continuing."
+            sleep(delay_secs)
+            delay_secs *= 2
+          end
         end
       elsif parser.url
         Main.dl parser
