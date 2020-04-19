@@ -56,7 +56,7 @@ module Muse::Dl
               # https://muse.jhu.edu/book/67393
               # Errors are Unable to determine page runs / Unable to construct chapter PDF
               if /Unable to/.match line
-                raise Muse::Dl::Errors::MuseCorruptPDF.new
+                raise Muse::Dl::Errors::MuseCorruptPDF.new("Error: MUSE is unable to generate PDF for #{url}")
               end
             end
           end
@@ -95,10 +95,10 @@ module Muse::Dl
             return Muse::Dl::Journal.new response
           end
         rescue ex : Crest::NotFound
-          raise Muse::Dl::Errors::InvalidLink.new
+          raise Muse::Dl::Errors::InvalidLink.new("Error - could not download url: #{url}")
         end
       else
-        raise Muse::Dl::Errors::InvalidLink.new
+        raise Muse::Dl::Errors::InvalidLink.new("Error - url does not match expected pattern: #{url}")
       end
     end
   end
