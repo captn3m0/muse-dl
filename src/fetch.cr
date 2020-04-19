@@ -43,7 +43,10 @@ module Muse::Dl
 
       # TODO: Add validation for the downloaded file (should be PDF)
       Crest.get(url, max_redirects: 0, handle_errors: false, headers: headers) do |response|
-        # puts response.headers["Content-Type"]
+        if !response.success?
+          raise Muse::Dl::Errors::DownloadError.new("Error downloading chapter. HTTP response code: #{response.status}")
+        end
+
         content_type = response.headers["Content-Type"]
         if content_type.is_a? String
           if /html/.match content_type
@@ -59,7 +62,12 @@ module Muse::Dl
           end
         end
         File.open(tmp_pdf_file, "w") do |file|
-          IO.copy(response.body_io, file)
+          response_str = response.body
+          file << response_str
+          if file.size == 0
+            # puts response.headers
+            raise Muse::Dl::Errors::DownloadError.new("Error: downloaded chapter file size is zero. Response size was #{response_str.bytesize}")
+          end
         end
       end
 
