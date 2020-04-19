@@ -79,13 +79,14 @@ module Muse::Dl
               delay_secs /= 2
             end
           rescue ex : Muse::Dl::Errors::DownloadError
-            puts ex
+            puts ex.backtrace.join("\n    ")
             puts "Download error. Skipping book: #{url}. Waiting for #{delay_secs} seconds before continuing."
             # Sleep to prevent hammering the server.
             sleep(delay_secs)
             delay_secs *= 2
           rescue ex
-            puts ex
+            puts ex.backtrace.join("\n    ")
+            pp ex
             puts "Non-download error. Skipping book: #{url}."
             sleep(1)
           end
