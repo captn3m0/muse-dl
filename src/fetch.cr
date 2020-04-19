@@ -62,11 +62,9 @@ module Muse::Dl
           end
         end
         File.open(tmp_pdf_file, "w") do |file|
-          response_str = response.body
-          file << response_str
+          IO.copy(response.body_io, file)
           if file.size == 0
-            # puts response.headers
-            raise Muse::Dl::Errors::DownloadError.new("Error: downloaded chapter file size is zero. Response size was #{response_str.bytesize}")
+            raise Muse::Dl::Errors::DownloadError.new("Error: downloaded chapter file size is zero. Response Content-Length header was #{headers["Content-Length"]}")
           end
         end
       end
