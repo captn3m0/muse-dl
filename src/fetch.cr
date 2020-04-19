@@ -64,7 +64,7 @@ module Muse::Dl
       if content_type.is_a? String
         if /html/.match content_type
           puts response
-          response.body_io.each_line do |line|
+          response.body.each_line do |line|
             # https://muse.jhu.edu/chapter/2383438/pdf
             # https://muse.jhu.edu/book/67393
             # Errors are Unable to determine page runs / Unable to construct chapter PDF
@@ -75,7 +75,7 @@ module Muse::Dl
         end
       end
       File.open(tmp_pdf_file, "w") do |file|
-        IO.copy(response.body_io, file)
+        file << response.body
         if file.size == 0
           raise Muse::Dl::Errors::DownloadError.new("Error: downloaded chapter file size is zero. Response Content-Length header was #{headers["Content-Length"]}")
         end
