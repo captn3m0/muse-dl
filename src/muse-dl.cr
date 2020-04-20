@@ -83,7 +83,8 @@ module Muse::Dl
             puts ex.backtrace.join("\n    ")
             puts "Error. Skipping book: #{url}. Waiting for #{delay_secs} seconds before continuing."
             sleep(delay_secs)
-            delay_secs *= 2
+            if delay_secs < 256
+              delay_secs *= 2
           end
         end
       elsif parser.url
