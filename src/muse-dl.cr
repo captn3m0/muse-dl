@@ -85,6 +85,7 @@ module Muse::Dl
             sleep(delay_secs)
             if delay_secs < 256
               delay_secs *= 2
+            end
           end
         end
       elsif parser.url
