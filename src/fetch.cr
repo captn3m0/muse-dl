@@ -71,6 +71,9 @@ module Muse::Dl
             if /Unable to/.match line
               raise Muse::Dl::Errors::MuseCorruptPDF.new("Error: MUSE is unable to generate PDF for #{url}")
             end
+            if /Your IP has requested/.match line
+              raise Muse::Dl::Errors::DownloadError.new("Error: MUSE Rate-limit reached")
+            end
           end
         end
       end
