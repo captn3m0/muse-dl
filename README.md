@@ -30,7 +30,7 @@ A docker image is available at `captn3m0/muse-dl` on Docker Hub. The working dir
 # Download the book, and put it in your Downloads directory
 docker run -it /home/nemo/Downloads:/data captn3m0/muse-dl:edge https://muse.jhu.edu/book/875
 
-# If you have a list.txt file in your Downloads directory, then you can run 
+# If you have a list.txt file in your Downloads directory, then you can run
 docker run -it /home/nemo/Downloads:/data captn3m0/muse-dl:edge /data/list.txt
 
 # If you want to keep the temporary files with your host, and not delete them
@@ -66,6 +66,7 @@ INPUT_FILE: Path to a file containing a list of links
     --no-bookmarks                   Don't add bookmarks in the PDF
     --input-pdf INPUT                Input Stitched PDF. Will not download anything
     --clobber                        Overwrite the output file, if it already exists. Not compatible with input-pdf
+    --dont-strip-first-page          Disables first page from being stripped. Use carefully
     --cookie COOKIE                  Cookie-header
     -h, --help                       Show this help
 ```

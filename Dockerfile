@@ -12,19 +12,19 @@ RUN mkdir -p /usr/share/man/man1 && \
 	apt-get update && \
 	apt-get install  --yes --no-install-recommends \
 	# Install gnupg for the apt-key operation
-	gnupg=2.2.12-1+deb10u1 \
+	gnupg \
 	# libssl for faster TLS in Crystal
-	libssl-dev=1.1.1d-0+deb10u2 \
+	libssl-dev \
 	# pdftk as a dependency for muse-dl
 	pdftk=2.02-5 \
 	# ca-certificates for talking to crystal-lang.org
-	ca-certificates=20190110 \
+	ca-certificates \
 	# git to let shards install happen
-	git=1:2.20.1-2+deb10u1 \
+	git \
 	# needed by myhtml crystal shard
-	make=4.2.1-1.2 \
+	make \
 	# build --release
-	zlib1g-dev=1:1.2.11.dfsg-1 && \
+	zlib1g-dev && \
 	# See https://crystal-lang.org/install/
 	apt-key add /tmp/crystal.gpg && \
 	echo "deb https://dist.crystal-lang.org/apt crystal main" > /etc/apt/sources.list.d/crystal.list && \
