@@ -34,7 +34,7 @@ module Muse::Dl
           # Save each chapter
           thing.chapters.each do |chapter|
             begin
-              Fetch.save_chapter(parser.tmp, chapter[0], chapter[1], parser.cookie, parser.bookmarks)
+              Fetch.save_chapter(parser.tmp, chapter[0], chapter[1], parser.cookie, parser.bookmarks, parser.strip_first)
             rescue e : Muse::Dl::Errors::MuseCorruptPDF
               STDERR.puts "Got a 'Unable to construct chapter PDF' error from MUSE, skipping: #{url}"
               return
@@ -51,6 +51,7 @@ module Muse::Dl
         end
 
         temp_stitched_file.delete if temp_stitched_file
+        puts "--dont-strip-first-page was on. Please validate PDF file for any errors."
         puts "DL: #{url}. Saved final output to #{parser.output}"
 
         # Cleanup the chapter files

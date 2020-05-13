@@ -6,6 +6,8 @@ module Muse::Dl
     @bookmarks = true
     @tmp : String
     @cleanup = true
+    # Whether to strip the first page
+    @strip_first = true
     @output = DEFAULT_FILE_NAME
     @url : String | Nil
     @input_pdf : String | Nil
@@ -16,7 +18,7 @@ module Muse::Dl
 
     DEFAULT_FILE_NAME = "tempfilename.pdf"
 
-    getter :bookmarks, :tmp, :cleanup, :output, :url, :input_pdf, :clobber, :input_list, :cookie
+    getter :bookmarks, :tmp, :cleanup, :output, :url, :input_pdf, :clobber, :input_list, :cookie, :strip_first
     setter :url
 
     # Update the output filename unless we have a custom one passed
@@ -56,6 +58,7 @@ module Muse::Dl
       parser.on(long_flag = "--no-bookmarks", description = "Don't add bookmarks in the PDF") { @bookmarks = false }
       parser.on(long_flag = "--input-pdf INPUT", description = "Input Stitched PDF. Will not download anything") { |input| @input_pdf = input }
       parser.on(long_flag = "--clobber", description = "Overwrite the output file, if it already exists. Not compatible with input-pdf") { @clobber = true }
+      parser.on(long_flag = "--dont-strip-first-page", description = "Disables first page from being stripped. Use carefully") { @strip_first = false }
       parser.on(long_flag = "--cookie COOKIE", description = "Cookie-header") { |cookie| @cookie = cookie }
       parser.on("-h", "--help", "Show this help") { @h = true; puts parser }
 

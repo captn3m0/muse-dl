@@ -42,7 +42,8 @@ module Muse::Dl
       if is_success
         File.rename output_pdf.path, input_file
       else
-        raise Muse::Dl::Errors::PDFOperationError.new("Error stripping first page of chapter.")
+        puts ("Error stripping first page of chapter. Maybe try using --dont-strip-first-page")
+        exit 1
       end
     end
 

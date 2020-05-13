@@ -23,7 +23,7 @@ module Muse::Dl
       File.delete(fns) if File.exists?(fns)
     end
 
-    def self.save_chapter(tmp_path : String, chapter_id : String, chapter_title : String, cookie : String | Nil = nil, add_bookmark = true)
+    def self.save_chapter(tmp_path : String, chapter_id : String, chapter_title : String, cookie : String | Nil = nil, add_bookmark = true, strip_first_page = true)
       final_pdf_file = chapter_file_name chapter_id, tmp_path
       tmp_pdf_file = "#{final_pdf_file}.tmp"
 
@@ -86,7 +86,7 @@ module Muse::Dl
 
       pdftk = Muse::Dl::Pdftk.new tmp_path
 
-      pdftk.strip_first_page tmp_pdf_file
+      pdftk.strip_first_page tmp_pdf_file if strip_first_page
 
       if add_bookmark
         # Run pdftk and add the bookmark to the file
