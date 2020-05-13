@@ -12,7 +12,7 @@ install:
 script:
   - crystal spec
   - crystal tool format --check
-  - git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 ${HADOLINT}
+  - git ls-files --exclude='Dockerfile*' --ignored | xargs --max-lines=1 ${HADOLINT} --ignore DL3008
 
 addons:
   apt:

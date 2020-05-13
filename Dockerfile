@@ -29,7 +29,7 @@ RUN mkdir -p /usr/share/man/man1 && \
 	apt-key add /tmp/crystal.gpg && \
 	echo "deb https://dist.crystal-lang.org/apt crystal main" > /etc/apt/sources.list.d/crystal.list && \
 	apt-get update && \
-	apt-get install --no-install-recommends --yes crystal=0.33.0-1 && \
+	apt-get install --no-install-recommends --yes crystal=0.34.0-1 && \
 	# Cleanup
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
