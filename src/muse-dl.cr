@@ -30,25 +30,20 @@ module Muse::Dl
         temp_stitched_file = nil
         pdf_builder = Pdftk.new(parser.tmp)
 
-        unless parser.input_pdf
-          # Save each chapter
-          thing.chapters.each do |chapter|
-            begin
-              Fetch.save_chapter(parser.tmp, chapter[0], chapter[1], parser.cookie, parser.bookmarks, parser.strip_first)
-            rescue e : Muse::Dl::Errors::MuseCorruptPDF
-              STDERR.puts "Got a 'Unable to construct chapter PDF' error from MUSE, skipping: #{url}"
-              return
-            end
+        # Save each chapter
+        thing.chapters.each do |chapter|
+          begin
+            Fetch.save_chapter(parser.tmp, chapter[0], chapter[1], parser.cookie, parser.bookmarks, parser.strip_first)
+          rescue e : Muse::Dl::Errors::MuseCorruptPDF
+            STDERR.puts "Got a 'Unable to construct chapter PDF' error from MUSE, skipping: #{url}"
+            return
           end
-          chapter_ids = thing.chapters.map { |c| c[0] }
-
-          # Stitch the PDFs together
-          temp_stitched_file = pdf_builder.stitch chapter_ids
-          pdf_builder.add_metadata(temp_stitched_file, parser.output, thing)
-        else
-          x = parser.input_pdf
-          pdf_builder.add_metadata(File.open(x), parser.output, thing) if x
         end
+        chapter_ids = thing.chapters.map { |c| c[0] }
+
+        # Stitch the PDFs together
+        temp_stitched_file = pdf_builder.stitch chapter_ids
+        pdf_builder.add_metadata(temp_stitched_file, parser.output, thing)
 
         temp_stitched_file.delete if temp_stitched_file
         puts "--dont-strip-first-page was on. Please validate PDF file for any errors." if parser.strip_first
@@ -60,6 +55,8 @@ module Muse::Dl
             Fetch.cleanup(parser.tmp, c[0])
           end
         end
+      elsif thing.is_a? Muse::Dl::Article
+        puts(thing)
       end
     end
 

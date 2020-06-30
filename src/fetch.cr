@@ -98,7 +98,7 @@ module Muse::Dl
     end
 
     def self.get_info(url : String)
-      match = /https:\/\/muse.jhu.edu\/(book|journal)\/(\d+)/.match url
+      match = /https:\/\/muse.jhu.edu\/(book|journal|issue|article)\/(\d+)/.match url
       if match
         begin
           response = Crest.get(url).to_s
@@ -107,6 +107,10 @@ module Muse::Dl
             return Muse::Dl::Book.new response
           when "journal"
             return Muse::Dl::Journal.new response
+          when "issue"
+            return Muse::Dl::Issue.new response
+          when "article"
+            return Muse::Dl::Article.new match[2]
           end
         rescue ex : Crest::NotFound
           raise Muse::Dl::Errors::InvalidLink.new("Error - could not download url: #{url}")
