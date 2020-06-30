@@ -4,6 +4,7 @@ require "./fetch.cr"
 require "./book.cr"
 require "./journal.cr"
 require "./util.cr"
+require "file_utils"
 
 module Muse::Dl
   VERSION = "1.1.2"
@@ -56,7 +57,20 @@ module Muse::Dl
           end
         end
       elsif thing.is_a? Muse::Dl::Article
-        puts(thing)
+        # No bookmarks are needed since this is just a single article PDF
+        begin
+          Fetch.save_article(parser.tmp, thing.id, parser.cookie, nil, parser.strip_first)
+        rescue e : Muse::Dl::Errors::MuseCorruptPDF
+          STDERR.puts "Got a 'Unable to construct chapter PDF' error from MUSE, skipping: #{url}"
+          return
+        end
+
+        # TODO: Move this code elsewhere
+        source = Fetch.article_file_name(thing.id, parser.tmp)
+        destination = "article-#{thing.id}.pdf"
+        # Needed because of https://github.com/crystal-lang/crystal/issues/7777
+        FileUtils.cp source, destination
+        FileUtils.rm source if parser.cleanup
       end
     end
 
