@@ -27,6 +27,11 @@ module Muse::Dl
       File.delete(fns) if File.exists?(fns)
     end
 
+    def self.cleanup_articles(tmp_path : String, id : String)
+      fns = article_file_name(id, tmp_path)
+      File.delete(fns) if File.exists?(fns)
+    end
+
     def self.save_url(url : String, referer : String, file_name : String, tmp_path : String, cookie : String | Nil = nil, bookmark_title : String | Nil = nil, strip_first_page = true)
       tmp_pdf_file = "#{file_name}.tmp"
       if File.exists? file_name

@@ -3,11 +3,12 @@ require "./issue.cr"
 
 module Muse::Dl
   class Journal
-    getter :info, :summary, :publisher, :issues
+    getter :info, :summary, :publisher, :issues, :title
     @info = Hash(String, String).new
     @summary : String
     @publisher : String
     @issues = [] of Muse::Dl::Issue
+    @title : String
 
     private getter :h
 
@@ -16,6 +17,7 @@ module Muse::Dl
       @info = InfoParser.infobox(h)
       @summary = InfoParser.summary(h)
       @publisher = InfoParser.journal_publisher(h)
+      @title = InfoParser.journal_title(h)
       parse_volumes(h)
     end
 
@@ -32,7 +34,9 @@ module Muse::Dl
 
         matches = /\/issue\/(\d+)/.match link
         if matches
-          @issues.push Muse::Dl::Issue.new matches[1]
+          issue = Muse::Dl::Issue.new matches[1]
+          issue.journal_title = @title
+          @issues.push issue
         end
       end
     end

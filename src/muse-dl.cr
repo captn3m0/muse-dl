@@ -12,6 +12,7 @@ module Muse::Dl
   class Main
     def self.dl(parser : Parser)
       url = parser.url
+      puts "Downloading #{url}"
       thing = Fetch.get_info(url) if url
       return unless thing
 
@@ -78,7 +79,7 @@ module Muse::Dl
         FileUtils.rm source if parser.cleanup
       elsif thing.is_a? Muse::Dl::Issue
         # Will have no effect if parser has a custom title
-        parser.output = Util.slug_filename "#{thing.journal_title} - #{thing.title}.pdf"
+        parser.force_set_output Util.slug_filename "#{thing.journal_title} - #{thing.title}.pdf"
 
         # If file exists and we can't clobber
         if File.exists?(parser.output) && parser.clobber == false
@@ -88,7 +89,6 @@ module Muse::Dl
         temp_stitched_file = nil
         pdf_builder = Pdftk.new(parser.tmp)
 
-        # ## TODO till 111
         thing.articles.each do |article|
           begin
             Fetch.save_article(parser.tmp, article.id, parser.cookie, article.title, parser.strip_first)
@@ -101,21 +101,25 @@ module Muse::Dl
 
         # Stitch the PDFs together
         temp_stitched_file = pdf_builder.stitch_articles article_ids
-        # TODO: Add metadata for each Issue
         pdf_builder.add_metadata(temp_stitched_file, parser.output, thing)
 
         # temp_stitched_file.delete if temp_stitched_file
         puts "--dont-strip-first-page was on. Please validate PDF file for any errors." unless parser.strip_first
         puts "DL: #{url}. Saved final output to #{parser.output}"
 
-        # Cleanup the chapter files
-        # TODO
-        # if parser.cleanup
-        #   thing.articles.each do |c|
-        #     Fetch.cleanup(parser.tmp, c[0])
-        #   end
-        # end
-        ####
+        # Cleanup the issue files
+        if parser.cleanup
+          thing.articles.each do |a|
+            Fetch.cleanup_articles(parser.tmp, a.id)
+          end
+        end
+      elsif thing.is_a? Muse::Dl::Journal
+        thing.issues.each do |issue|
+          # Update the issue
+          issue.parse
+          parser.url = issue.url
+          Main.dl parser
+        end
       end
     end
 

@@ -42,6 +42,10 @@ module Muse::Dl
       end
     end
 
+    def self.journal_title(myhtml : Myhtml::Parser)
+      myhtml.css("#journal_about_info .title").map(&.inner_text).to_a[0].strip
+    end
+
     def self.author(myhtml : Myhtml::Parser)
       myhtml.css("#book_about_info .author").map(&.inner_text).to_a[0].strip.gsub("<BR>", ", ").gsub("\n", " ")
     end

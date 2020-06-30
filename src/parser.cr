@@ -26,6 +26,10 @@ module Muse::Dl
       @output = output_file unless @output != DEFAULT_FILE_NAME
     end
 
+    def force_set_output(output_file : String)
+      @output = output_file
+    end
+
     def reset_output_file
       @output = DEFAULT_FILE_NAME
     end
