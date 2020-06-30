@@ -57,5 +57,29 @@ describe Muse::Dl::Issue do
     issue.info["Open Access"].should eq "Yes"
     issue.title.should eq "Volume 1, Issue 2, 2016"
     issue.journal_title.should eq "Constitutional Studies"
+
+    expected_pages = [
+      [1, 22],
+      [23, 40],
+      [41, 58],
+      [59, 80],
+      [81, 95],
+      [97, 116],
+    ]
+
+    expected_titles = [
+      "The Limits of Veneration: Public Support for a New Constitutional Convention",
+      "Secession and Nullification as a Global Trend",
+      "Challenging Constitutionalism in Post-Apartheid South Africa",
+      "Democracy by Lawsuit: Or, Can Litigation Alleviate the European Union’s “Democratic Deficit?”",
+      "Private Enforcement of Constitutional Guarantees in the Ku Klux Act of 1871",
+      "Sober Second Thoughts: Evaluating the History of Horizontal Judicial Review by the U.S. Supreme Court",
+    ]
+
+    issue.articles.each_with_index do |a, i|
+      a.start_page.should eq expected_pages[i][0]
+      a.end_page.should eq expected_pages[i][1]
+      a.title.should eq expected_titles[i]
+    end
   end
 end

@@ -3,7 +3,7 @@ require "./issue.cr"
 
 module Muse::Dl
   class Article
-    getter id : String
+    getter id : String, :start_page, :end_page, :title
     setter title : String | Nil, start_page : Int32 | Nil, end_page : Int32 | Nil
 
     def initialize(id : String)
