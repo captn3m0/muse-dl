@@ -15,6 +15,11 @@ module Muse::Dl
       thing = Fetch.get_info(url) if url
       return unless thing
 
+      if (thing.open_access) && (parser.skip_oa)
+        STDERR.puts "Skipping #{url}, available under Open Access"
+        return
+      end
+
       if thing.is_a? Muse::Dl::Book
         unless thing.formats.includes? :pdf
           STDERR.puts "Book not available in PDF format, skipping: #{url}"

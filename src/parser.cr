@@ -14,10 +14,11 @@ module Muse::Dl
     @input_list : String | Nil
     @cookie : String | Nil
     @h : Bool | Nil
+    @skip_oa = false
 
     DEFAULT_FILE_NAME = "tempfilename.pdf"
 
-    getter :bookmarks, :tmp, :cleanup, :output, :url, :clobber, :input_list, :cookie, :strip_first
+    getter :bookmarks, :tmp, :cleanup, :output, :url, :clobber, :input_list, :cookie, :strip_first, :skip_oa
     setter :url
 
     # Update the output filename unless we have a custom one passed
@@ -57,6 +58,7 @@ module Muse::Dl
       parser.on(long_flag = "--clobber", description = "Overwrite the output file, if it already exists. Not compatible with input-pdf") { @clobber = true }
       parser.on(long_flag = "--dont-strip-first-page", description = "Disables first page from being stripped. Use carefully") { @strip_first = false }
       parser.on(long_flag = "--cookie COOKIE", description = "Cookie-header") { |cookie| @cookie = cookie }
+      parser.on(long_flag = "--skip-open-access", description = "Don't download open access content") { @skip_oa = true }
       parser.on("-h", "--help", "Show this help") { @h = true; puts parser }
 
       parser.unknown_args do |args|

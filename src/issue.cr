@@ -24,6 +24,13 @@ module Muse::Dl
       @info = Hash(String, String).new
     end
 
+    def open_access
+      if @info.has_key? "Open Access"
+        return @info["Open Access"] == "Yes"
+      end
+      false
+    end
+
     def parse(html : String)
       h = Myhtml::Parser.new html
       @info = InfoParser.infobox(h)

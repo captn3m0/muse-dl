@@ -19,6 +19,13 @@ module Muse::Dl
       parse_volumes(h)
     end
 
+    def open_access
+      if @info.has_key? "Open Access"
+        return @info["Open Access"] == "Yes"
+      end
+      false
+    end
+
     def parse_volumes(myhtml : Myhtml::Parser)
       myhtml.css("#available_issues_list_text a").each do |a|
         link = a.attribute_by("href").to_s

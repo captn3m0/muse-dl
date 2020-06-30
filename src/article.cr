@@ -10,5 +10,10 @@ module Muse::Dl
       @id = id
       @url = "https://muse.jhu.edu/article/#{id}"
     end
+
+    # TODO: Fix this
+    def open_access
+      return false
+    end
   end
 end
