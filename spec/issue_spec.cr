@@ -37,4 +37,25 @@ describe Muse::Dl::Issue do
   it "should parse publisher" do
     issue.publisher.should eq "Johns Hopkins University Press"
   end
+  it "should parse the journal title" do
+    issue.journal_title.should eq "portal: Libraries and the Academy"
+  end
+
+  it "should parse non-numbered issues" do
+    WebMock.stub(:get, "https://muse.jhu.edu/issue/35852")
+      .to_return(body: File.new("spec/fixtures/issue-35852.html").gets_to_end)
+    issue = Muse::Dl::Issue.new "35852"
+    issue.parse
+
+    issue.volume.should eq "1"
+    issue.number.should eq "2"
+    issue.date.should eq "2016"
+
+    issue.info["ISSN"].should eq "2474-9419"
+    issue.info["Print ISSN"].should eq "2474-9427"
+    issue.info["Launched on MUSE"].should eq "2017-02-21"
+    issue.info["Open Access"].should eq "Yes"
+    issue.title.should eq "Volume 1, Issue 2, 2016"
+    issue.journal_title.should eq "Constitutional Studies"
+  end
 end

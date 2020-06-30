@@ -1,29 +1,26 @@
-require "./thing.cr"
+"./thing.cr"
 require "./fetch.cr"
 require "./article.cr"
 
 module Muse::Dl
   class Issue
-    @id : String
-    @title : String | Nil
-    @articles : Array(Muse::Dl::Article)
-    @url : String
-    @info : Hash(String, String)
-    @summary : String | Nil
-    @publisher : String | Nil
-    @volume : String | Nil
-    @number : String | Nil
-    @date : String | Nil
-    @issues : Array(Muse::Dl::Issue)
-
-    getter :id, :title, :articles, :url, :summary, :publisher, :info, :volume, :number, :date
+    getter id : String,
+      title : String | Nil,
+      articles : Array(Muse::Dl::Article),
+      url : String,
+      summary : String | Nil,
+      publisher : String | Nil,
+      info : Hash(String, String),
+      volume : String | Nil,
+      number : String | Nil,
+      date : String | Nil,
+      journal_title : String | Nil
 
     def initialize(id : String)
       @id = id
       @url = "https://muse.jhu.edu/issue/#{id}"
       @info = Hash(String, String).new
       @articles = [] of Muse::Dl::Article
-      @issues = [] of Muse::Dl::Issue
     end
 
     def parse
@@ -42,17 +39,38 @@ module Muse::Dl
       unless t.nil?
         @volume = /Volume (\d+)/.match(t).try &.[1]
         @number = /Number (\d+)/.match(t).try &.[1]
+        @number = /Issue (\d+)/.match(t).try &.[1] unless @number
         @date = /((January|February|March|April|May|June|July|August|September|October|November|December) (\d+))/.match(t).try &.[1]
+        @date = /(\d{4})/.match(t).try &.[1] unless @date
       end
     end
 
     def parse_contents(myhtml : Myhtml::Parser)
-      myhtml.css("#available_issues_list_text a").each do |a|
-        link = a.attribute_by("href").to_s
+      journal_title_a = myhtml.css("#journal_banner_title a").first
+      if journal_title_a
+        @journal_title = journal_title_a.inner_text
+      end
+      myhtml.css(".articles_list_text ol").each do |ol|
+        link = ol.css("li.title a").first
+        title = link.inner_text
 
-        matches = /\/issue\/(\d+)/.match link
+        pages = ol.css("li.pg").first.try &.inner_text
+        matches = /(\d+)-(\d+)/.match pages
         if matches
-          @issues.push Muse::Dl::Issue.new matches[1]
+          start_page = matches[1].to_i
+          end_page = matches[2].to_i
+        end
+
+        ol.css("a").each do |l|
+          url = l.attribute_by("href").to_s
+          matches = /\/article\/(\d+)\/pdf/.match url
+          if matches
+            a = Muse::Dl::Article.new matches[1]
+            a.title = title
+            a.start_page = start_page if start_page
+            a.end_page = end_page if end_page
+            @articles.push a
+          end
         end
       end
     end
