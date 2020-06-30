@@ -1,4 +1,5 @@
 require "./spec_helper"
+require "webmock"
 # require "errors/muse_corrupt_pdf.cr"
 
 describe Muse::Dl::Book do

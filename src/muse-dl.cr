@@ -51,7 +51,7 @@ module Muse::Dl
         end
 
         temp_stitched_file.delete if temp_stitched_file
-        puts "--dont-strip-first-page was on. Please validate PDF file for any errors."
+        puts "--dont-strip-first-page was on. Please validate PDF file for any errors." if parser.strip_first
         puts "DL: #{url}. Saved final output to #{parser.output}"
 
         # Cleanup the chapter files
