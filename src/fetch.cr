@@ -132,7 +132,7 @@ module Muse::Dl
           when "journal"
             return Muse::Dl::Journal.new response
           when "issue"
-            return Muse::Dl::Issue.new response
+            return Muse::Dl::Issue.new match[2], response
           when "article"
             return Muse::Dl::Article.new match[2]
           end

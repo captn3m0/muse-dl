@@ -16,15 +16,15 @@ module Muse::Dl
       date : String | Nil,
       journal_title : String | Nil
 
-    def initialize(id : String)
+    def initialize(id : String, response : String | Nil = nil)
       @id = id
       @url = "https://muse.jhu.edu/issue/#{id}"
-      @info = Hash(String, String).new
       @articles = [] of Muse::Dl::Article
+      parse(response) if response
+      @info = Hash(String, String).new
     end
 
-    def parse
-      html = Crest.get(url).to_s
+    def parse(html : String)
       h = Myhtml::Parser.new html
       @info = InfoParser.infobox(h)
       @title = InfoParser.issue_title(h)

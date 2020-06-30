@@ -35,7 +35,11 @@ module Muse::Dl
     end
 
     def self.issue_title(myhtml : Myhtml::Parser)
-      myhtml.css(".card_text .title").map(&.inner_text).to_a[0].strip
+      begin
+        myhtml.css(".card_text .title").map(&.inner_text).to_a[0].strip
+      rescue
+        nil
+      end
     end
 
     def self.author(myhtml : Myhtml::Parser)

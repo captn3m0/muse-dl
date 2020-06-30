@@ -47,7 +47,7 @@ module Muse::Dl
         pdf_builder.add_metadata(temp_stitched_file, parser.output, thing)
 
         temp_stitched_file.delete if temp_stitched_file
-        puts "--dont-strip-first-page was on. Please validate PDF file for any errors." if parser.strip_first
+        puts "--dont-strip-first-page was on. Please validate PDF file for any errors." unless parser.strip_first
         puts "DL: #{url}. Saved final output to #{parser.output}"
 
         # Cleanup the chapter files
@@ -73,7 +73,7 @@ module Muse::Dl
         FileUtils.rm source if parser.cleanup
       elsif thing.is_a? Muse::Dl::Issue
         # Will have no effect if parser has a custom title
-        parser.output = Util.slug_filename "#{thing.title}.pdf"
+        parser.output = Util.slug_filename "#{thing.journal_title} - #{thing.title}.pdf"
 
         # If file exists and we can't clobber
         if File.exists?(parser.output) && parser.clobber == false
@@ -84,30 +84,32 @@ module Muse::Dl
         pdf_builder = Pdftk.new(parser.tmp)
 
         # ## TODO till 111
-        thing.issues.each do |issue|
+        thing.articles.each do |article|
           begin
-            Fetch.save_issue(parser.tmp, chapter[0], chapter[1], parser.cookie, parser.bookmarks, parser.strip_first)
+            Fetch.save_article(parser.tmp, article.id, parser.cookie, article.title, parser.strip_first)
           rescue e : Muse::Dl::Errors::MuseCorruptPDF
             STDERR.puts "Got a 'Unable to construct chapter PDF' error from MUSE, skipping: #{url}"
             return
           end
         end
-        chapter_ids = thing.chapters.map { |c| c[0] }
+        article_ids = thing.articles.map { |a| a.id }
 
         # Stitch the PDFs together
-        temp_stitched_file = pdf_builder.stitch chapter_ids
+        temp_stitched_file = pdf_builder.stitch_articles article_ids
+        # TODO: Add metadata for each Issue
         pdf_builder.add_metadata(temp_stitched_file, parser.output, thing)
 
-        temp_stitched_file.delete if temp_stitched_file
-        puts "--dont-strip-first-page was on. Please validate PDF file for any errors." if parser.strip_first
+        # temp_stitched_file.delete if temp_stitched_file
+        puts "--dont-strip-first-page was on. Please validate PDF file for any errors." unless parser.strip_first
         puts "DL: #{url}. Saved final output to #{parser.output}"
 
         # Cleanup the chapter files
-        if parser.cleanup
-          thing.chapters.each do |c|
-            Fetch.cleanup(parser.tmp, c[0])
-          end
-        end
+        # TODO
+        # if parser.cleanup
+        #   thing.articles.each do |c|
+        #     Fetch.cleanup(parser.tmp, c[0])
+        #   end
+        # end
         ####
       end
     end

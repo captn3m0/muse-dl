@@ -70,7 +70,6 @@ module Muse::Dl
 
     def add_metadata(input_file : File, output_file : String, book : Book)
       # First we have to dump the current metadata
-      metadata_text_file = File.tempfile("muse-dl-metadata-tmp", ".txt")
       keywords = "Publisher:#{book.publisher}, Published:#{book.date}"
 
       # Known Info keys, if they are present
@@ -80,7 +79,12 @@ module Muse::Dl
         end
       end
 
-      text = <<-EOT
+      metadata_text = gen_metadata(book.title, keywords, book.summary.gsub(/\n\s+/, " "), book.author)
+      write_metadata(input_file, output_file, metadata_text)
+    end
+
+    def gen_metadata(title : String, keywords : String, subject : String, author : String | Nil = nil)
+      metadata = <<-EOT
       InfoBegin
       InfoKey: Creator
       InfoValue:
@@ -89,25 +93,37 @@ module Muse::Dl
       InfoValue:
       InfoBegin
       InfoKey: Title
-      InfoValue: #{book.title}
+      InfoValue: #{title}
       InfoBegin
       InfoKey: Keywords
       InfoValue: #{keywords}
       InfoBegin
-      InfoKey: Author
-      InfoValue: #{book.author}
-      InfoBegin
       InfoKey: Subject
-      InfoValue: #{book.summary.gsub(/\n\s+/, " ")}
+      InfoValue: #{subject}
       InfoBegin
       InfoKey: ModDate
       InfoValue:
       InfoBegin
       InfoKey: CreationDate
       InfoValue:
+
       EOT
 
+      unless author.nil?
+        metadata += <<-EOT
+        InfoBegin
+        InfoKey: Author
+        InfoValue: #{author}
+        EOT
+      end
+
+      return metadata
+    end
+
+    def write_metadata(input_file : File, output_file : String, text)
+      metadata_text_file = File.tempfile("muse-dl-metadata-tmp", ".txt")
       File.write(metadata_text_file.path, text)
+
       is_success = execute [input_file.path, "update_info_utf8", metadata_text_file.path, "output", output_file]
       if !is_success
         raise Muse::Dl::Errors::PDFOperationError.new("Error adding metadata to book.")
@@ -115,11 +131,42 @@ module Muse::Dl
       metadata_text_file.delete
     end
 
+    def add_metadata(input_file : File, output_file : String, issue : Issue)
+      # First we have to dump the current metadata
+      metadata_text_file = File.tempfile("muse-dl-metadata-tmp", ".txt")
+      keywords = "Journal:#{issue.journal_title}, Published:#{issue.date},Volume:#{issue.volume},Number:#{issue.number}"
+      ["ISSN", "Print ISSN", "DOI", "Language", "Open Access"].each do |label|
+        if issue.info.has_key? label
+          keywords += ", #{label}:#{issue.info[label]}"
+        end
+      end
+
+      # TODO: Move this to Issue class
+
+      s = issue.summary
+      unless s.nil?
+        summary = s.gsub(/\n\s+/, " ")
+      else
+        summary = "NA"
+      end
+
+      t = issue.title
+
+      unless t.nil?
+        title = t
+      else
+        title = "NA"
+      end
+      # TODO: Add support for all authors in the PDF
+      metadata = gen_metadata(title, keywords, summary)
+      write_metadata(input_file, output_file, metadata)
+    end
+
     def stitch(chapter_ids : Array(String))
       output_file = File.tempfile("muse-dl-stitched-tmp", ".pdf")
       # Do some sanity checks on each Chapter PDF
       chapter_ids.each do |id|
-        raise Muse::Dl::Errors::MissingChapter.new unless File.exists? Fetch.chapter_file_name(id, @tmp_file_path)
+        raise Muse::Dl::Errors::MissingFile.new unless File.exists? Fetch.chapter_file_name(id, @tmp_file_path)
         raise Muse::Dl::Errors::CorruptFile.new unless File.size(Fetch.chapter_file_name(id, @tmp_file_path)) > 0
       end
 
@@ -132,6 +179,29 @@ module Muse::Dl
       # TODO: Validate final file here
       if !is_success
         raise Muse::Dl::Errors::PDFOperationError.new("Error stitching chapters together.")
+      end
+
+      return output_file
+    end
+
+    # TODO: Merge with stitch
+    def stitch_articles(article_ids : Array(String))
+      output_file = File.tempfile("muse-dl-stitched-tmp", ".pdf")
+      # Do some sanity checks on each Chapter PDF
+      article_ids.each do |id|
+        raise Muse::Dl::Errors::MissingFile.new unless File.exists? Fetch.article_file_name(id, @tmp_file_path)
+        raise Muse::Dl::Errors::CorruptFile.new unless File.size(Fetch.article_file_name(id, @tmp_file_path)) > 0
+      end
+
+      # Now let's stitch them together
+      article_files = article_ids.map { |id| Fetch.article_file_name(id, @tmp_file_path) }
+      args = article_files + ["cat", "output", output_file.path]
+      is_success = execute args
+
+      # TODO: Validate final file here
+      if !is_success
+        puts args
+        raise Muse::Dl::Errors::PDFOperationError.new("Error stitching articles together.")
       end
 
       return output_file
