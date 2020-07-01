@@ -115,10 +115,15 @@ module Muse::Dl
         end
       elsif thing.is_a? Muse::Dl::Journal
         thing.issues.each do |issue|
-          # Update the issue
-          issue.parse
-          parser.url = issue.url
-          Main.dl parser
+          begin
+            # Update the issue
+            issue.parse
+            parser.url = issue.url
+            Main.dl parser
+          rescue e
+            puts e.message
+            puts "Faced an exception with previous issue, continuing"
+          end
         end
       end
     end
