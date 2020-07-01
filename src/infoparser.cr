@@ -34,6 +34,18 @@ module Muse::Dl
       myhtml.css("#book_about_info .title").map(&.inner_text).to_a[0].strip
     end
 
+    def self.issue_title(myhtml : Myhtml::Parser)
+      begin
+        myhtml.css(".card_text .title").map(&.inner_text).to_a[0].strip
+      rescue
+        nil
+      end
+    end
+
+    def self.journal_title(myhtml : Myhtml::Parser)
+      myhtml.css("#journal_about_info .title").map(&.inner_text).to_a[0].strip
+    end
+
     def self.author(myhtml : Myhtml::Parser)
       myhtml.css("#book_about_info .author").map(&.inner_text).to_a[0].strip.gsub("<BR>", ", ").gsub("\n", " ")
     end
@@ -50,9 +62,13 @@ module Muse::Dl
       myhtml.css("#book_about_info .pub a").map(&.inner_text).to_a[0].strip
     end
 
+    def self.journal_publisher(myhtml : Myhtml::Parser)
+      myhtml.css(".card_publisher a").map(&.inner_text).to_a[0].strip
+    end
+
     def self.summary(myhtml : Myhtml::Parser)
       begin
-        return myhtml.css("#book_about_info .card_summary").map(&.inner_text).to_a[0].strip
+        return myhtml.css(".card_summary").map(&.inner_text).to_a[0].strip
       rescue e : Exception
         STDERR.puts "Could not fetch summary"
         return "NA"

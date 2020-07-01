@@ -8,3 +8,6 @@ release:
 	docker image save muse-dl-static | tar xf - --wildcards "*/layer.tar" -O | tar xf - "muse-dl-static"
 	# And move it to the bin/ directory
 	mv -f muse-dl-static bin/
+
+test:
+	crystal spec

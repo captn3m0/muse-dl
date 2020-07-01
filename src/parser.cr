@@ -10,20 +10,24 @@ module Muse::Dl
     @strip_first = true
     @output = DEFAULT_FILE_NAME
     @url : String | Nil
-    @input_pdf : String | Nil
     @clobber = false
     @input_list : String | Nil
     @cookie : String | Nil
     @h : Bool | Nil
+    @skip_oa = false
 
     DEFAULT_FILE_NAME = "tempfilename.pdf"
 
-    getter :bookmarks, :tmp, :cleanup, :output, :url, :input_pdf, :clobber, :input_list, :cookie, :strip_first
+    getter :bookmarks, :tmp, :cleanup, :output, :url, :clobber, :input_list, :cookie, :strip_first, :skip_oa
     setter :url
 
     # Update the output filename unless we have a custom one passed
     def output=(output_file : String)
       @output = output_file unless @output != DEFAULT_FILE_NAME
+    end
+
+    def force_set_output(output_file : String)
+      @output = output_file
     end
 
     def reset_output_file
@@ -41,7 +45,6 @@ module Muse::Dl
 
     def initialize(arg : Array(String) = [] of String)
       @tmp = Dir.tempdir
-      @input_pdf = nil
 
       parser = OptionParser.new
       parser.banner = <<-EOT
@@ -56,10 +59,10 @@ module Muse::Dl
       parser.on(long_flag = "--tmp-dir PATH", description = "Temporary Directory to use") { |path| @tmp = path }
       parser.on(long_flag = "--output FILE", description = "Output Filename") { |file| @output = file }
       parser.on(long_flag = "--no-bookmarks", description = "Don't add bookmarks in the PDF") { @bookmarks = false }
-      parser.on(long_flag = "--input-pdf INPUT", description = "Input Stitched PDF. Will not download anything") { |input| @input_pdf = input }
       parser.on(long_flag = "--clobber", description = "Overwrite the output file, if it already exists. Not compatible with input-pdf") { @clobber = true }
       parser.on(long_flag = "--dont-strip-first-page", description = "Disables first page from being stripped. Use carefully") { @strip_first = false }
       parser.on(long_flag = "--cookie COOKIE", description = "Cookie-header") { |cookie| @cookie = cookie }
+      parser.on(long_flag = "--skip-open-access", description = "Don't download open access content") { @skip_oa = true }
       parser.on("-h", "--help", "Show this help") { @h = true; puts parser }
 
       parser.unknown_args do |args|
@@ -70,7 +73,6 @@ module Muse::Dl
         end
         if File.exists? args[0]
           @input_list = args[0]
-          @input_pdf = nil
         else
           @url = args[0]
         end

@@ -16,3 +16,8 @@ dependencies:
     github: kostya/myhtml
   crest:
     github: mamantoha/crest
+
+development_dependencies:
+  webmock:
+    github: manastech/webmock.cr
+    branch: master
