@@ -7,7 +7,7 @@ require "./util.cr"
 require "file_utils"
 
 module Muse::Dl
-  VERSION = "1.1.2"
+  VERSION = "1.3.0"
 
   class Main
     def self.dl(parser : Parser)
