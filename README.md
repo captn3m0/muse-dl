@@ -64,8 +64,7 @@ INPUT_FILE: Path to a file containing a list of links
     --tmp-dir PATH                   Temporary Directory to use
     --output FILE                    Output Filename
     --no-bookmarks                   Don't add bookmarks in the PDF
-    --input-pdf INPUT                Input Stitched PDF. Will not download anything
-    --clobber                        Overwrite the output file, if it already exists. Not compatible with input-pdf
+    --clobber                        Overwrite the output file, if it already exists.
     --dont-strip-first-page          Disables first page from being stripped. Use carefully
     --cookie COOKIE                  Cookie-header
     -h, --help                       Show this help

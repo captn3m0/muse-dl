@@ -59,7 +59,7 @@ module Muse::Dl
       parser.on(long_flag = "--tmp-dir PATH", description = "Temporary Directory to use") { |path| @tmp = path }
       parser.on(long_flag = "--output FILE", description = "Output Filename") { |file| @output = file }
       parser.on(long_flag = "--no-bookmarks", description = "Don't add bookmarks in the PDF") { @bookmarks = false }
-      parser.on(long_flag = "--clobber", description = "Overwrite the output file, if it already exists. Not compatible with input-pdf") { @clobber = true }
+      parser.on(long_flag = "--clobber", description = "Overwrite the output file, if it already exists.") { @clobber = true }
       parser.on(long_flag = "--dont-strip-first-page", description = "Disables first page from being stripped. Use carefully") { @strip_first = false }
       parser.on(long_flag = "--cookie COOKIE", description = "Cookie-header") { |cookie| @cookie = cookie }
       parser.on(long_flag = "--skip-open-access", description = "Don't download open access content") { @skip_oa = true }
