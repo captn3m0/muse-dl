@@ -45,8 +45,8 @@ The following images are available:
 
 - `edge`: Run `muse-dl` against latest master.
 - `edge-static`: Get the pre-built static-binary against latest master.
-- `v1.0.2`: Run `muse-dl` against the specific release.
-- `v1.0.2-static`: Get the pre-built static binary against the specific release.
+- `v1.3.1`: Run `muse-dl` against the specific release.
+- `v1.3.1-static`: Get the pre-built static binary against the specific release.
 
 ## Requirements
 

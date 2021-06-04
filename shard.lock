@@ -2,17 +2,21 @@ version: 2.0
 shards:
   crest:
     git: https://github.com/mamantoha/crest.git
-    version: 0.25.1
+    version: 0.27.0
 
   http-client-digest_auth:
     git: https://github.com/mamantoha/http-client-digest_auth.git
-    version: 0.4.0
+    version: 0.6.0
+
+  http_proxy:
+    git: https://github.com/mamantoha/http_proxy.git
+    version: 0.8.0
 
   myhtml:
     git: https://github.com/kostya/myhtml.git
-    version: 1.5.1
+    version: 1.5.4
 
   webmock:
     git: https://github.com/manastech/webmock.cr.git
-    version: 0.13.0+git.commit.bb3eab30f6c7d1fdc0a7ff14cd136d68e860d1a7
+    version: 0.14.0+git.commit.42b347cdd64e13193e46167a03593944ae2b3d20
 
