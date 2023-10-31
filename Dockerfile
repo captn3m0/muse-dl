@@ -5,7 +5,7 @@ WORKDIR /build
 COPY . .
 
 # Add the key for the crystal debian repo
-ADD https://keybase.io/crystal/pgp_keys.asc /tmp/crystal.gpg
+ADD https://download.opensuse.org/repositories/devel:/languages:/crystal/Debian_10/Release.key /tmp/crystal.key
 
 # See https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=863199 for why mkdir is needed
 RUN mkdir -p /usr/share/man/man1 && \
@@ -26,10 +26,12 @@ RUN mkdir -p /usr/share/man/man1 && \
 	# build --release
 	zlib1g-dev && \
 	# See https://crystal-lang.org/install/
-	apt-key add /tmp/crystal.gpg && \
-	echo "deb https://dist.crystal-lang.org/apt crystal main" > /etc/apt/sources.list.d/crystal.list && \
+	echo "deb http://download.opensuse.org/repositories/devel:/languages:/crystal/Debian_10/ /" | tee /etc/apt/sources.list.d/crystal.list && \
+	gpg --dearmor /tmp/crystal.key && \
+	mv /tmp/crystal.key.gpg /etc/apt/trusted.gpg.d/crystal.gpg && \
+	rm /tmp/crystal.key && \
 	apt-get update && \
-	apt-get install --no-install-recommends --yes crystal=0.34.0-1 && \
+	apt-get install --no-install-recommends --yes crystal && \
 	# Cleanup
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
